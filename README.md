@@ -9,9 +9,8 @@ Anything that speaks the Valve Source RCON protocol can talk to it. The
 download is a drop-in bundle that includes UE4SS, so there's nothing else to
 install.
 
-> **Private servers only. BattlEye must be disabled.**
-> Use at your own risk — no warranty, and no guarantee against future game
-> updates breaking the mod or against bans.
+> **Use at your own risk — no warranty, and no guarantee against future game**
+> **updates breaking the mod or against bans.**
 
 ## Install
 
