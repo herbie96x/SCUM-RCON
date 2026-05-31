@@ -16,11 +16,8 @@ bot, ...). They all speak the same protocol.
 ================================================================
 
 * A SCUM dedicated server you control.
-* Private / whitelisted server only - NOT for anti-cheat-protected
-  public PvP servers.
-* BattlEye DISABLED: launch the server with -nobattleye AND
-  stop/disable the BattlEye service. UE4SS mods do not load while
-  BattlEye is active.
+* A working brain
+* A RCON-Tool
 
 ================================================================
  QUICK-START INSTALL (5 minutes)
@@ -82,7 +79,7 @@ bot, ...). They all speak the same protocol.
  USING THE COMMANDS
 ================================================================
 
-See USAGE.md (next to this file) for the full command guide:
+See USAGE.md for the full command guide:
 how to send commands, which commands need a player's SteamID,
 the notification and chat-colour codes, the spawn-location forms,
 and the common mistakes.
@@ -94,17 +91,14 @@ and the common mistakes.
 * USE AT YOUR OWN RISK. No warranty. No guarantee against future
   game updates breaking the mod, and no guarantee against bans.
 
-* PRIVATE / WHITELISTED SERVERS ONLY, BattlEye disabled.
+* PRIVATE SERVERS ONLY
 
 * DO NOT expose the RCON port to the open internet without a
-  strong password. The protocol does not encrypt traffic - use a
-  VPN or SSH tunnel for remote access.
+  strong password. The protocol does not encrypt traffic.
 
 ================================================================
  LICENSE / CREDITS
 ================================================================
-
-Command guide:  USAGE.md (next to this file)
 
 Licenses:
 - scum_rcon:        Proprietary EULA - free for community use, not
