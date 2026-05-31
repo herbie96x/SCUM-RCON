@@ -1,10 +1,10 @@
 # END USER LICENSE AGREEMENT (EULA)
 
 **SCUM-RCON**
-**Copyright (c) 2026 herbie (SKRYPT). All rights reserved.**
+**Copyright (c) 2026 herbie96x (SKRYPT). All rights reserved.**
 
 This End User License Agreement ("Agreement") is a legal agreement between
-you (either an individual or a single entity, "you") and herbie ("the
+you (either an individual or a single entity, "you") and herbie96x ("the
 Author") for the SCUM-RCON mod and its accompanying drop-in bundle ("the
 Software").
 
@@ -43,8 +43,6 @@ policies.
 The drop-in bundle includes third-party software that is NOT covered by this
 Agreement and is licensed separately under its own terms:
 *   **UE4SS** — licensed under the MIT License (see `ue4ss/LICENSE`).
-*   **mcrcon** — licensed under the zlib License (see
-    `tools/mcrcon-LICENSE.txt`).
 This Agreement governs only the SCUM-RCON mod component authored by the
 Author. Nothing in this Agreement limits any rights you have under the
 licenses of those third-party components.
