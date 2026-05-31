@@ -17,9 +17,7 @@ install.
 1. Download `Win64.zip` from the latest release.
 2. Extract its contents — `dwmapi.dll` and the `ue4ss` folder — into your
    server's `SCUM\Binaries\Win64\` directory.
-3. Disable BattlEye: launch the server with `-nobattleye` **and** stop/disable
-   the BattlEye service (UE4SS mods won't load with BattlEye active).
-4. Open `ue4ss\Mods\scum_rcon\config.ini` and set a real password — the
+3. Open `ue4ss\Mods\scum_rcon\config.ini` and set a real password — the
    listener refuses to start while it's still `CHANGE_ME_BEFORE_USE`.
 
    ```ini
@@ -28,7 +26,7 @@ install.
    password = CHANGE_ME_BEFORE_USE   ; change this
    ```
 
-5. Start the server. In `ue4ss\UE4SS.log`, look for the `[SCUM-RCON]` lines —
+4. Start the server. In `ue4ss\UE4SS.log`, look for the `[SCUM-RCON]` lines —
    they report the listener address (default `0.0.0.0:28015`), or why it
    didn't start.
 
