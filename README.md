@@ -9,7 +9,7 @@ Anything that speaks the Valve Source RCON protocol can talk to it. The
 download is a drop-in bundle that includes UE4SS, so there's nothing else to
 install.
 
-> **Private / whitelisted servers only. BattlEye must be disabled.**
+> **Private servers only. BattlEye must be disabled.**
 > Use at your own risk — no warranty, and no guarantee against future game
 > updates breaking the mod or against bans.
 
@@ -36,7 +36,7 @@ install.
 Full step-by-step instructions are in **INSTALL.txt** inside the download.
 
 > Don't expose the RCON port to untrusted networks without a strong password
-> and a VPN/SSH tunnel — Source RCON is unencrypted by design.
+> — Source RCON is unencrypted by design.
 
 ## Use
 
@@ -70,4 +70,4 @@ Not affiliated with Gamepires; SCUM is a trademark of Gamepires.
 
 ## Bugs & questions
 
-Open an issue here, or post in the Nexus Mods comments on the SCUM-RCON page.
+Open an issue here, or post in the Nexus Mods comments/bug section on the SCUM-RCON page.
