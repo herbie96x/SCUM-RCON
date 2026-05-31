@@ -2,7 +2,7 @@
 
 User-facing changes. See `USAGE.md` for how to use the commands.
 
-## 0.2.0
+## 0.2.1
 
 ### New
 
