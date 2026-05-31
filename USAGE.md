@@ -1,8 +1,7 @@
 # SCUM-RCON — Command Usage Guide
 
 How to send commands over RCON, what the special commands expect, and the
-notification / chat-colour codes. For the protocol/integration side (ports,
-auth, client libraries) see `INTEGRATION.md`.
+notification / chat-colour codes.
 
 ---
 
@@ -15,11 +14,11 @@ auth, client libraries) see `INTEGRATION.md`.
   memory won't bite you.
 - **Quotes group words.** Any argument containing spaces — a message, a
   multi-word player name, a coordinate struct — must be wrapped in double
-  quotes. `Teleport 1000 2000 300 "ADMIN ENOTOCKA"` finds the two-word player;
-  without quotes only `ADMIN` is searched.
+  quotes. `Teleport 1000 2000 300 "SUPER ADMIN ` finds the two-word player;
+  without quotes only `SUPER` is searched.
 - **SteamID = 17 digits.** Wherever a command needs a target player, it's the
   player's 17-digit SteamID64, given as the **last** argument.
-- Replies come back as UTF-8 plain text (umlauts, Cyrillic, Chinese, emoji all
+- Replies come back as UTF-8 plain text (umlauts, Cyrillic, Chinese, all
   work).
 
 ---
@@ -35,12 +34,10 @@ server-side without anyone online:
 Announce Hello everyone
 SetTime 9
 SetWeather 0.5
-ChangeFamePoints 500 <steamid>
-Kick <steamid>
-BanPlayer <steamid>
+ListSquads 1
+ListPlayers
+ShutdownServer Pretty Please
 ```
-
-Send `Help` over RCON for SCUM's own list of verbs.
 
 ### 2. Player-affecting commands (need a target SteamID)
 
@@ -81,10 +78,10 @@ SendNotification 2 0 "Welcome to the server!" <steamid>
 | type | Style | Where |
 |---|---|---|
 | **1** | Toast | top-right (cargo-drop style) |
-| **2** | HUD toast | centre — the default for system messages |
-| **3** | *(no visible output — don't use)* | — |
+| **2** | Announce | centre — the default for announce messages |
+| **3** | LevelUP Notify | Don't use, message isn't customizable |
 | **4** | Self-talk | subtle character thought (e.g. "I feel cold") |
-| **5** | Banner | bottom-centre highlight |
+| **5** | Killfeed-Banner | bottom-centre highlight |
 
 > Advanced: if you already know a player's internal id you may pass it directly
 > as `SendNotification <type> <id> "<message>"` (no SteamID). The SteamID form
