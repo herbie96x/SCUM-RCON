@@ -176,14 +176,9 @@ database / logs. (See "Known Limitations" in `INTEGRATION.md`.)
 
 ## Common pitfalls
 
-- **`unknown command: '#spawnitem'`** — you sent `#SpawnItem` and the `#` got
-  attached; harmless now (it's stripped), but if you see this on an older build,
-  drop the `#`.
 - **Spawn lands at (0,0,0)** — no `Location` argument, or the location was a
   quoted list of bare numbers. Use a coord struct, a SteamID, or bare `X Y Z`.
 - **Player command does nothing / "not online"** — the target SteamID must
   belong to a **currently online** player.
 - **Two-word name not found** — wrap it in quotes:
   `Teleport X Y Z "First Last"`.
-- **Notification/chat not visible** — check the type code (type 3 is silent),
-  and that the target SteamID is online.
