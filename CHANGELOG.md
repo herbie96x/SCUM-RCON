@@ -2,6 +2,32 @@
 
 User-facing changes. See `USAGE.md` for how to use the commands.
 
+## 0.2.4
+
+### New
+
+- **`SendChat` can broadcast to everyone.** Leave off the trailing SteamID and
+  the coloured chat line goes to **all online players** — for event
+  announcements, warnings or notices in a normal chat colour, instead of the
+  big `Announce` banner. With a SteamID it still goes to just that player.
+
+### Fixed
+
+- **Spawning weapons no longer crashes the server.** `SpawnItem` for a weapon —
+  e.g. `SpawnItem Weapon_MK18` — could access-violate and take the whole server
+  down, while simple items (Banana) and vehicles spawned fine. Root cause: the
+  spawn ran mid-frame, so the weapon's animation blueprint started updating
+  before the weapon had finished initialising. Commands now run on the engine's
+  frame boundary, so the spawn completes its init cycle first. Weapons spawn
+  cleanly.
+
+### Requires
+
+- **`HookEngineTick = 1`** in the `[Hooks]` section of `ue4ss\UE4SS-settings.ini`.
+  The settings file in the download already has it set — this only matters if you
+  carry over your own settings file from an older install. Without it, weapon
+  spawns can still crash (SCUM-RCON warns you about it in `UE4SS.log` on startup).
+
 ## 0.2.1
 
 ### New
