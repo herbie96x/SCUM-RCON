@@ -1,0 +1,32 @@
+name: 🤝 Collaboration request
+description: Want to actively help with SCUM-RCON? Tell us what you'd like to work on.
+title: "[Collab] "
+labels: ["collaboration"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        SCUM-RCON's core is closed-source (RE-protection + Gamepires internals). Collaboration happens **on top of** the RCON API — clients, panels, bots, docs, tests. This is **not** the place to request the source or the "how" of the core.
+  - type: textarea
+    id: work-on
+    attributes:
+      label: What would you like to work on?
+      description: e.g. an RCON client, a web panel, a Discord bot, documentation, translations, testing
+    validations:
+      required: true
+  - type: textarea
+    id: bring
+    attributes:
+      label: What do you bring?
+      description: Relevant skills/experience, languages you work in.
+    validations:
+      required: true
+  - type: input
+    id: built
+    attributes:
+      label: Have you already built something with SCUM-RCON?
+      description: Link it if you can — your own client, server setup, etc.
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
