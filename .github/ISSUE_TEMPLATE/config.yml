@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Usage guide (read first)
+    url: https://github.com/herbie96x/SCUM-RCON/blob/main/USAGE.md
+    about: Command reference, notification/chat codes, spawn-location forms, common pitfalls.
+  - name: 💬 Nexus Mods page
+    url: https://www.nexusmods.com/scum/mods/41
+    about: Questions and bug reports can also go in the Nexus comments/bug section.
