@@ -24,3 +24,6 @@ labels: ["bug"]
 **Relevant `UE4SS.log` lines**
 <!-- Paste the [SCUM-RCON] lines from ue4ss/UE4SS.log around the issue.
      The startup lines show whether the listener and hooks came up correctly. -->
+
+**Server / setup notes**
+<!-- SCUM server version, host (self-hosted / GGHost / …), anything else relevant -->
