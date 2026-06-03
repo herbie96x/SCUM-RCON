@@ -57,6 +57,14 @@ See **[USAGE.md](USAGE.md)** for the full guide — the notification and
 chat-colour codes, which commands need a player's SteamID, the three
 spawn-location forms, and the common pitfalls.
 
+## 🤝 Contributing & Collaboration
+
+SCUM-RCON is free for everyone to use, and contributions are welcome — bug reports, feature requests, docs, and your own clients/panels/bots built against the RCON protocol. Fork and open a PR; no write access needed.
+
+The **core mod stays closed-source** (RE-protection + Gamepires internals) — the *what* is open to build on, the *how* stays closed.
+
+Want to collaborate more closely? Open a **Collaboration request** issue. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for details.
+
 ## License
 
 Closed-source, **free to use** under the EULA in `LICENSE`: download and run on
