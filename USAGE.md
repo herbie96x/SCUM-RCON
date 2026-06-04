@@ -165,7 +165,7 @@ may exceed Source-RCON's 4096-byte per-packet limit and is then split across
 multi-packet responses to see the whole list — **`mcrcon` reads only the first
 packet** (roughly the first 60 vehicles). It needs at least one player online.
 
-### 8. #Inventory — give / manipulate a player's inventory
+### 8. Inventory — manipulate a player's inventory
 
 ```
 #Inventory <PlayerId> <SubCommand> [item] [count]
