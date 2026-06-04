@@ -207,7 +207,7 @@ Common sub-commands:
 | Spawn at coords | no | use `Location "{…}"` or `Location X Y Z` |
 | Silence / Unsilence | **yes** | |
 | ListSpawnedVehicles | no | multi-packet reply; needs a player online |
-| #Inventory | no | uses online caller; needs a player online |
+| Inventory | no | uses online caller; needs a player online |
 
 ---
 
