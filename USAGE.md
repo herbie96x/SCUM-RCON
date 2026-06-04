@@ -153,10 +153,45 @@ Unsilence <steamid>
 
 ### 7. List commands (read-only)
 
-`ListPlayers`, `ListSquads`, `ListMutedPlayers`, … run, but their output goes
-through an internal path RCON can't capture, so you'll get a short canned reply
-rather than the live list. To read the real lists, query SCUM's own
+Most list commands (`ListPlayers`, `ListSquads`, `ListMutedPlayers`, …) run, but
+their output goes through an internal path RCON can't capture, so you'll get a
+short canned reply rather than the live list. To read those, query SCUM's own
 database / logs. (See "Known Limitations" in `INTEGRATION.md`.)
+
+**`ListSpawnedVehicles` is the exception — it returns the real list**, one line
+per vehicle (id, name, position, owner). Because the list can be long, the reply
+may exceed Source-RCON's 4096-byte per-packet limit and is then split across
+**multiple packets** (same request id). Use an RCON client that supports
+multi-packet responses to see the whole list — **`mcrcon` reads only the first
+packet** (roughly the first 60 vehicles). It needs at least one player online.
+
+### 8. #Inventory — give / manipulate a player's inventory
+
+```
+#Inventory <PlayerId> <SubCommand> [item] [count]
+```
+
+Manipulates the inventory of the player or container identified by `<PlayerId>`.
+**No trailing SteamID is needed** — the command automatically uses an online
+player as its caller context, so **at least one player must be online** for it
+to run (it does nothing on an empty server).
+
+Common sub-commands:
+
+```
+#Inventory <PlayerId> Character_SetItemInHands <item>
+#Inventory <PlayerId> Character_SetItemOnLShoulder <item>
+#Inventory <PlayerId> Character_SetItemOnRShoulder <item>
+#Inventory <PlayerId> Character_EquipClothes <backpack>
+#Inventory <PlayerId> Character_UnequipClothes <backpack>
+#Inventory <PlayerId> Character_Pickup <item>
+#Inventory <PlayerId> RemoveEntry <item>
+#Inventory <backpack> SpawnAndAddItems <item> <count>
+```
+
+> `SpawnAndAddItems` / `Item_Drop` use the caller's position (the first online
+> player) for any positional placement, so they're best for direct inventory
+> grants rather than dropping at a precise coordinate.
 
 ---
 
@@ -171,6 +206,8 @@ database / logs. (See "Known Limitations" in `INTEGRATION.md`.)
 | Spawn at player | **yes** (as `Location`) | or a coord struct / bare X Y Z |
 | Spawn at coords | no | use `Location "{…}"` or `Location X Y Z` |
 | Silence / Unsilence | **yes** | |
+| ListSpawnedVehicles | no | multi-packet reply; needs a player online |
+| #Inventory | no | uses online caller; needs a player online |
 
 ---
 
@@ -182,3 +219,8 @@ database / logs. (See "Known Limitations" in `INTEGRATION.md`.)
   belong to a **currently online** player.
 - **Two-word name not found** — wrap it in quotes:
   `Teleport X Y Z "First Last"`.
+- **ListSpawnedVehicles shows only ~60 vehicles** — your RCON client only read
+  the first packet. The list is split across multiple packets; use a
+  multi-packet-capable client (`mcrcon` does not support this).
+- **#Inventory does nothing** — the server needs at least one online player for
+  the caller context; it silently no-ops on an empty server.
