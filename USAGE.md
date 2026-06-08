@@ -60,6 +60,19 @@ Knockout 30 <steamid>
 
 If the target isn't online you get `player <steamid> is not online`.
 
+> **⚠️ `SetGodMode` and non-admin targets — read this.** GodMode in SCUM is a
+> build cheat: it lets the player *fill placeable blueprints for free*
+> (the "GodModeFill" interaction). But SCUM validates that interaction
+> **server-side against the real admin list** — the player must be a genuine
+> configured server admin. Setting GodMode over RCON flips the godmode flag (so
+> the player's client *offers* free-building), but it does **not** make them an
+> admin. The instant a non-admin player actually free-builds while godmoded,
+> SCUM's own anti-cheat (`AConZGameMode::BanPlayerById`, an "Interaction
+> Violation: GodModeFill") **auto-bans them**. This is SCUM's design, not an RCON
+> bug, and it cannot be worked around from the RCON side. **Only give GodMode to
+> players who are already real server admins.** (`SetImmortality` — damage
+> immunity — is unaffected and safe to grant to anyone.)
+
 ### 3. SendNotification — pop-up / toast / banner
 
 A short on-screen notification to one player. **Recommended form** (resolves
@@ -162,36 +175,64 @@ database / logs. (See "Known Limitations" in `INTEGRATION.md`.)
 per vehicle (id, name, position, owner). Because the list can be long, the reply
 may exceed Source-RCON's 4096-byte per-packet limit and is then split across
 **multiple packets** (same request id). Use an RCON client that supports
-multi-packet responses to see the whole list — **`mcrcon` reads only the first
-packet** (roughly the first 60 vehicles). It needs at least one player online.
+multi-packet responses to see the whole list — the bundled **`rcon_console`**
+handles this; `mcrcon` reads only the first packet (roughly the first 60
+vehicles). It needs at least one player online.
 
-### 8. Inventory — manipulate a player's inventory
-
-```
-#Inventory <PlayerId> <SubCommand> [item] [count]
-```
-
-Manipulates the inventory of the player or container identified by `<PlayerId>`.
-**No trailing SteamID is needed** — the command automatically uses an online
-player as its caller context, so **at least one player must be online** for it
-to run (it does nothing on an empty server).
-
-Common sub-commands:
+### 8. Inventory — limited support
 
 ```
-#Inventory <PlayerId> Character_SetItemInHands <item>
-#Inventory <PlayerId> Character_SetItemOnLShoulder <item>
-#Inventory <PlayerId> Character_SetItemOnRShoulder <item>
-#Inventory <PlayerId> Character_EquipClothes <backpack>
-#Inventory <PlayerId> Character_UnequipClothes <backpack>
-#Inventory <PlayerId> Character_Pickup <item>
-#Inventory <PlayerId> RemoveEntry <item>
-#Inventory <backpack> SpawnAndAddItems <item> <count>
+#Inventory <PlayerId> SpawnAndAddItems <item> <count> <online-SteamID>
 ```
 
-> `SpawnAndAddItems` / `Item_Drop` use the caller's position (the first online
-> player) for any positional placement, so they're best for direct inventory
-> grants rather than dropping at a precise coordinate.
+**Only `SpawnAndAddItems` works over RCON** — it grants items into the target's
+inventory. End the line with an online player's 17-digit SteamID (used as the
+caller context); at least one player must be online.
+
+**The `Character_*` / `Grid_*` sub-commands do NOT work over RCON.** That covers
+`Character_SetItemInHands`, `…_SetItemOnLShoulder` / `…_OnRShoulder`,
+`Character_EquipClothes` / `…_UnequipClothes`, `Character_Pickup`,
+`Grid_AddOrMoveEntry`, `RemoveEntry`. They are server-authoritative inventory
+operations gated on live game state (a bound entity-inventory component, the
+right per-pawn execution context) that the RCON dispatch path cannot reproduce,
+so they **silently do nothing** — verified across every dispatch route (direct
+dispatch, target-player caller, and the per-target chat pipeline). This is an
+engine limitation of driving those ops from outside a real client, not a bug we
+can fix from the RCON side.
+
+> Full give / equip-by-name (clothing on the body, item in hands, etc.) is
+> provided by the **skrypt.gg** server's own plugin suite, which manipulates the
+> live inventory natively. It is intentionally not part of this mod.
+
+---
+
+### 9. Show-* — client-rendered map / HUD toggles
+
+```
+#ShowNamePlates true <online-SteamID>
+#ShowVehicleLocations true <online-SteamID>
+#ShowFlagLocations true <online-SteamID>
+#ShowOtherPlayerLocations true <online-SteamID>
+#ShowOtherPlayerInfo true <online-SteamID>
+#ShowFlagInfo true <online-SteamID>
+#ShowVehicleInfo true <online-SteamID>
+#ShowArmedNPCsLocation true <online-SteamID>
+#ShowZombiesLocation true <online-SteamID>
+#ShowAnimalLocation true <online-SteamID>
+```
+
+The `…Info` variants are the same map overlays as their `…Locations`
+counterparts, with extra info; the `…Location` markers draw a line to every
+NPC / zombie / animal.
+
+These toggle a HUD/map overlay **on the target player's own client**, so they
+end with that player's SteamID and the player must be online. They are routed
+through the client pipeline (a `Chat_Client_*` RPC) — direct dispatch would run
+the server body only and the overlay would never reach the client.
+
+> `ShowNamePlates` shows *other* players' name plates, so on an empty server
+> there is nothing to render; test with `ShowVehicleLocations` (vehicle markers
+> appear on the map) when you are the only one online.
 
 ---
 
@@ -207,7 +248,8 @@ Common sub-commands:
 | Spawn at coords | no | use `Location "{…}"` or `Location X Y Z` |
 | Silence / Unsilence | **yes** | |
 | ListSpawnedVehicles | no | multi-packet reply; needs a player online |
-| Inventory | no | uses online caller; needs a player online |
+| Inventory (SpawnAndAddItems only) | **yes** | target online; Character_*/Grid_* unsupported |
+| Show-* (NamePlates, VehicleLocations, …) | **yes** | toggles the target's own client HUD |
 
 ---
 
@@ -221,6 +263,14 @@ Common sub-commands:
   `Teleport X Y Z "First Last"`.
 - **ListSpawnedVehicles shows only ~60 vehicles** — your RCON client only read
   the first packet. The list is split across multiple packets; use a
-  multi-packet-capable client (`mcrcon` does not support this).
-- **#Inventory does nothing** — the server needs at least one online player for
-  the caller context; it silently no-ops on an empty server.
+  multi-packet-capable client (the bundled `rcon_console` handles it; `mcrcon`
+  does not).
+- **#Inventory Character_* does nothing** — those sub-commands are unsupported
+  over RCON (see section 8); only `SpawnAndAddItems` works. For full give/equip
+  use the skrypt.gg plugin suite.
+- **Show-* / #ShowNamePlates does nothing visible** — the target must be online
+  (it toggles *their* client HUD), and `ShowNamePlates` needs other players in
+  view to render anything.
+- **A player got banned after I gave them `SetGodMode`** — expected for a
+  non-admin: free-building while godmoded trips SCUM's own anti-cheat. Only
+  godmode real server admins (see the warning under section 2).
