@@ -6,9 +6,9 @@
 [![Discord](https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/HhSraTKfrW)
 
 A standard **Source RCON** server for SCUM dedicated servers. Run admin
-commands on your server from any Source-RCON-compatible client — mcrcon,
-rcon-cli, BattleMetrics, WebRcon, a custom Discord bot, your own tooling — and
-you don't need an admin character online in-game to do it.
+commands on your server from any Source-RCON-compatible client — the bundled
+`rcon_console`, mcrcon, rcon-cli, BattleMetrics, WebRcon, a custom Discord bot,
+your own tooling — and you don't need an admin character online in-game to do it.
 
 Anything that speaks the Valve Source RCON protocol can talk to it. The
 download is a drop-in bundle that includes UE4SS, so there's nothing else to
@@ -42,31 +42,24 @@ Full step-by-step instructions are in **INSTALL.txt** inside the download.
 
 ## Use
 
-Connect with any Source RCON client and send admin commands as plain text:
+The download includes a ready-to-run console — **`tools\rcon_console\rcon_console.exe`**,
+a bilingual (English / German) RCON client, no Python needed. Double-click it,
+fill in the generated `ini\scum_rcon.ini` (host, port, password), then send admin
+commands as plain text:
 
 ```
-mcrcon -H <server-ip> -P 28015 -p <your-password> "Announce hello"
+rcon> Announce hello world
+rcon> ListSpawnedVehicles
 ```
 
-Examples:
-
-```
-SetTime 9
-SendNotification 2 0 "Welcome to the server!" <steamid>
-SendChat 4 "Bounty claimed: +500" <steamid>
-SetGodMode true <steamid>
-SpawnItem Apple 1 Location <steamid>
-```
+Any other Source RCON client (rcon-cli, BattleMetrics, a bot, …) works too —
+SCUM-RCON speaks the standard protocol.
 
 See **[USAGE.md](USAGE.md)** for the full guide — the notification and
 chat-colour codes, which commands need a player's SteamID, the three
 spawn-location forms, and the common pitfalls.
 
-## 🤝 Contributing & Collaboration
-
-SCUM-RCON is free for everyone to use, and contributions are welcome — bug reports, feature requests, docs, and your own clients/panels/bots built against the RCON protocol. Fork and open a PR; no write access needed.
-
-The **core mod stays closed-source** (RE-protection + Gamepires internals) — the *what* is open to build on, the *how* stays closed.
+## Contributing & Collaboration
 
 Want to collaborate more closely? Open a **Collaboration request** issue. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for details.
 
