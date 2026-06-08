@@ -42,9 +42,9 @@ Full step-by-step instructions are in **INSTALL.txt** inside the download.
 
 ## Use
 
-The download includes a ready-to-run console — **`tools\rcon_console\rcon_console.exe`**,
-a bilingual (English / German) RCON client, no Python needed. Double-click it,
-fill in the generated `ini\scum_rcon.ini` (host, port, password), then send admin
+The download includes a ready-to-run console — **`rcon_console.exe`**,
+a bilingual (English / German) RCON client. Double-click it, fill
+in the `ini\scum_rcon.ini` (host, port, password), then send admin
 commands as plain text:
 
 ```
