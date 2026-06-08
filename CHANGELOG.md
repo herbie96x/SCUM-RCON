@@ -25,10 +25,7 @@ User-facing changes. See `USAGE.md` for how to use the commands.
 - **`ListSpawnedVehicles` returns the real list** — one line per vehicle (id,
   type, position, owner). Long lists are split across **multiple packets**, so
   use an RCON client that supports multi-packet replies (the bundled
-  `rcon_console` does; `mcrcon` reads only the first packet). 
-  **NOTE:** The vehicle owner is resolved lazy, since the owner is not stored
-  in the vehicle itself. For a permanent vehicle-owner association, it is
-  recommended to query SCUM.db instead of using the command.
+  `rcon_console` does; `mcrcon` reads only the first packet).
 
 ### Known limitations (by engine)
 
