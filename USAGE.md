@@ -247,8 +247,8 @@ the server body only and the overlay would never reach the client.
 | Spawn at player | **yes** (as `Location`) | or a coord struct / bare X Y Z |
 | Spawn at coords | no | use `Location "{…}"` or `Location X Y Z` |
 | Silence / Unsilence | **yes** | |
-| ListSpawnedVehicles | no | multi-packet reply; needs a player online |
-| Inventory (SpawnAndAddItems only) | **yes** | target online; Character_*/Grid_* unsupported |
+| ListSpawnedVehicles | no | multi-packet reply |
+| Inventory (SpawnAndAddItems only) | **yes** | target online; Character_/Grid_* unsupported |
 | Show-* (NamePlates, VehicleLocations, …) | **yes** | toggles the target's own client HUD |
 
 ---
@@ -265,10 +265,9 @@ the server body only and the overlay would never reach the client.
   the first packet. The list is split across multiple packets; use a
   multi-packet-capable client (the bundled `rcon_console` handles it; `mcrcon`
   does not).
-- **#Inventory Character_* does nothing** — those sub-commands are unsupported
-  over RCON (see section 8); only `SpawnAndAddItems` works. For full give/equip
-  use the skrypt.gg plugin suite.
-- **Show-* / #ShowNamePlates does nothing visible** — the target must be online
+- **#Inventory Character_ does nothing** — those sub-commands are unsupported
+  over RCON (see section 8); only `SpawnAndAddItems` works.
+- **Show- / #ShowNamePlates does nothing visible** — the target must be online
   (it toggles *their* client HUD), and `ShowNamePlates` needs other players in
   view to render anything.
 - **A player got banned after I gave them `SetGodMode`** — expected for a
