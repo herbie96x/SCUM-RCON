@@ -2,6 +2,56 @@
 
 User-facing changes. See `USAGE.md` for how to use the commands.
 
+## 0.3.0
+
+### New
+
+- **Map / HUD overlay toggles over RCON.** Flip a player's on-screen markers
+  from RCON: name plates, plus the vehicle / flag / other-player **location**
+  *and* **info** overlays, plus line-markers for NPCs, zombies and animals
+  (`ShowNamePlates`, `ShowVehicleLocations`/`ShowVehicleInfo`,
+  `ShowFlagLocations`/`ShowFlagInfo`,
+  `ShowOtherPlayerLocations`/`ShowOtherPlayerInfo`, `ShowArmedNPCsLocation`,
+  `ShowZombiesLocation`, `ShowAnimalLocation`). They render on the **target
+  player's own client**, so end the command with that player's online 17-digit
+  SteamID.
+
+### Fixed
+
+- **Shutdown no longer crashes with an open RCON connection.** Restarting or
+  shutting the server down while an RCON client was still connected could
+  access-violate and take the whole server with it. The mod now detects the
+  shutdown, gates its command drain and closes the listener cleanly first.
+- **`ListSpawnedVehicles` returns the real list** — one line per vehicle (id,
+  type, position, owner). Long lists are split across **multiple packets**, so
+  use an RCON client that supports multi-packet replies (the bundled
+  `rcon_console` does; `mcrcon` reads only the first packet). 
+  **NOTE:** The vehicle owner is resolved lazy, since the owner is not stored
+  in the vehicle itself. For a permanent vehicle-owner association, it is
+  recommended to query SCUM.db instead of using the command.
+
+### Known limitations (by engine)
+
+- **GodMode is for real admins only.** Setting `SetGodMode` over RCON does flip
+  the flag, but a **non-admin** who then free-builds (the *GodModeFill*
+  interaction) is auto-banned by **SCUM's own anti-cheat** — it validates that
+  interaction against the real admin list. Only give GodMode to genuine server
+  admins
+  (`SetImmortality` — damage immunity — is unaffected and safe.)
+- **`#Inventory`: only `SpawnAndAddItems` works over RCON.** The `Character_*`
+  and `Grid_*` sub-commands are server-authoritative inventory operations that
+  silently do nothing over RCON — an engine limitation, documented in
+  `USAGE.md`.
+
+## 0.2.5
+
+### New
+
+- **`#Inventory … SpawnAndAddItems`** — grant items straight into an online
+  player's inventory over RCON:
+  `#Inventory <PlayerId> SpawnAndAddItems <item> <count> <online-SteamID>`.
+  At least one player must be online (the command needs a real player context).
+
 ## 0.2.4
 
 ### New
