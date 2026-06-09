@@ -157,6 +157,21 @@ SpawnItem Apple 1 Location 289265 -188112 15217
 > mistake is `Location "289265 -188112 15217"` (three bare numbers in quotes) —
 > that is **not** valid; use one of the three forms above.
 
+**`SpawnInventoryFullOf`** is the exception that has **no `Location`**: it spawns
+a container and fills it, and SCUM always places it **in front of the player**.
+Over RCON it is therefore routed through an online player, so **at least one player must be online**, 
+and the container appears in front of *that* player.
+
+```
+SpawnInventoryFullOf <Container> <SetCount> <Item1> <Item2> <SteamID>
+SpawnInventoryFullOf Improvised_Metal_Chest 1 Weapon_AKM <SteamID>
+```
+
+`<SetCount>` is how many times the whole item set is placed into the container.
+Container and item names are FNames — if unsure, run the exact line in the
+in-game admin console first (where the command also lives), then send the same
+line over RCON.
+
 ### 6. Silence / Unsilence
 
 ```
