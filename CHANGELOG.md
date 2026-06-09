@@ -2,6 +2,35 @@
 
 User-facing changes. See `USAGE.md` for how to use the commands.
 
+## 0.3.2
+
+### New
+
+- **`SpawnInventoryFullOf` over RCON** —
+  `SpawnInventoryFullOf <Container> <SetCount> <Item1> <Item2> … <sid>`. It spawns a
+  filled container **in front of a player** (no location argument — an engine
+  limit), so it routes through an online player: at least one player must be
+  online and the container appears in front of them. See `USAGE.md`.
+
+### Fixed
+
+- **Admin commands returning `controller is null` / nothing on some hosts
+  (`#ListPlayers`, `#ListFlags`, …).** To run admin commands without a real
+  player, the mod spawns a synthetic "system" controller. During boot it could pick 
+  a transient / half-initialized world state, which made that spawn fail so commands
+  had no caller. It now selects the live game world (the one with a valid
+  `AuthorityGameMode`), validates the cached world's liveness, and invalidates +
+  retries on a spawn fault (caching only on full success). If the controller still 
+  can't be built on a host, commands fall back to a real online player's controller as 
+  the caller when one is available.
+- **Server crash ~1 minute after start.** While the last map cell was streaming
+  in and the first players were connecting, a queued command could run on the
+  wrong engine thread and access-violate, taking the whole server down
+  (timing-dependent, so intermittent). Command dispatch is now gated to the game
+  thread, with a safety net so a fault during a volatile world state fails
+  cleanly and retries instead of crashing. Introduced in 0.3.0 — update strongly
+  recommended.
+
 ## 0.3.0
 
 ### New
