@@ -55,6 +55,12 @@ rcon> ListSpawnedVehicles
 Any other Source RCON client (rcon-cli, BattleMetrics, a bot, …) works too —
 SCUM-RCON speaks the standard protocol.
 
+> **Community client:**
+> [SCUM-RCON-Client](https://github.com/Neo2Go/SCUM-RCON-Client) by Neo2Go is a
+> lightweight Go client (single static binary, config-compatible with the bundled
+> `rcon_console`). It's a community project — not maintained by us; use it or
+> build it from source at your own discretion.
+
 See **[USAGE.md](USAGE.md)** for the full guide — the notification and
 chat-colour codes, which commands need a player's SteamID, the three
 spawn-location forms, and the common pitfalls.
