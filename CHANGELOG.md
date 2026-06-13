@@ -2,6 +2,59 @@
 
 User-facing changes. See `USAGE.md` for how to use the commands.
 
+## 0.4.0
+
+### New
+
+- **`#Inventory` now accepts the player's SteamID** — no more hunting for a
+  numeric entity id. SCUM's `#Inventory` wants the target's prisoner *entity id*
+  as its `<PlayerId>`; the mod now resolves a 17-digit SteamID to that id for you, 
+  so a single SteamID is enough:
+
+  ```
+  #Inventory <SteamID> SpawnAndAddItems <Item>_ES <count>
+  ```
+
+  A bare entity id still works, and an explicit trailing SteamID lets you target
+  a different player than the caller if ever needed. Tip: some items need their
+  `_ES` "entity setup" name (e.g. `Weapon_AKM_ES`, `Magazine_RPK_ES`) — the bare
+  name gives `'...' is not a valid item entity setup`.
+
+- **Boot gate — commands wait until the server is genuinely up.** The mod watches
+  the server log for BattlEye's `Connected to BE Master` line and holds **every**
+  command back until then (replying `server still starting …` in the meantime).
+  That is the reliable "fully up" marker — more precise than the engine-class
+  check and a guard against the early-boot command crash class. A one-time
+  `SCUM-RCON READY` line lands in the log when it flips, for tooling that wants to
+  wait for it. It fails open after a short timeout so a missing/unreadable log
+  never leaves the mod stuck.
+
+### Fixed
+
+- **`SpawnInventoryFullOf` now accepts a target player's SteamID.** Appending the
+  SteamID used to make it get parsed as a fill item (`'…' is not allowed to be
+  spawned`). It is now recognised as the routing target — the container spawns in
+  front of *that* player and the SteamID is dropped from the item list. Without
+  one, the first online player is used. Multiple item names are allowed.
+
+  ```
+  SpawnInventoryFullOf <Container> <SetCount> <Item1> <Item2> … [<SteamID>]
+  ```
+
+- **`ForceDropshipEncounter` / `ForceAnimalEncounter` now spawn at a player.**
+  They anchor to a player's location and take no coordinate argument; over RCON
+  they previously fired at world origin `(0,0,0)`. Append the target player's
+  SteamID (or omit it for the first online player):
+
+  ```
+  ForceDropshipEncounter <SteamID>
+  ```
+
+- **`SetAIInvisibility` now reaches the target.** It was running on the synthetic
+  controller (which has no pawn) and did nothing. It now uses the target player's
+  pawn as caller, like `SetGodMode`. It takes a bool: `SetAIInvisibility <1|0>
+  <SteamID>`.
+
 ## 0.3.2
 
 ### New
