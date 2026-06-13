@@ -5,78 +5,87 @@
 [![License: free-to-use (EULA)](https://img.shields.io/badge/license-free--to--use%20(EULA)-brightgreen)](LICENSE)
 [![Discord](https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/HhSraTKfrW)
 
-A standard **Source RCON** server for SCUM dedicated servers. Run admin
-commands on your server from any Source-RCON-compatible client — the bundled
-`rcon_console`, mcrcon, rcon-cli, BattleMetrics, WebRcon, a custom Discord bot,
-your own tooling — and you don't need an admin character online in-game to do it.
+A fully compliant **Source RCON** server for SCUM dedicated servers. Execute admin commands seamlessly from any Source-RCON-compatible client—including the bundled `rcon_console`, mcrcon, rcon-cli, BattleMetrics, WebRcon, or your custom Discord bots. No in-game admin character required.
 
-Anything that speaks the Valve Source RCON protocol can talk to it. The
-download is a drop-in bundle that includes UE4SS, so there's nothing else to
-install.
+Anything that speaks the Valve Source RCON protocol can connect to it. The download is a drop-in bundle that includes UE4SS, meaning there is absolutely no additional setup or dependencies required.
 
-> **Use at your own risk — no warranty, and no guarantee against future game**
-> **updates breaking the mod or against bans.**
+> ⚠️ **Disclaimer:** Use at your own risk. There is no warranty or guarantee against future game updates breaking the mod, or against potential bans.
 
-## Install
+---
 
-1. Download `Win64.zip` from the latest release.
-2. Extract its contents — `dwmapi.dll` and the `ue4ss` folder — into your
-   server's `SCUM\Binaries\Win64\` directory.
-3. Open `ue4ss\Mods\scum_rcon\config.ini` and set a real password — the
-   listener refuses to start while it's still `CHANGE_ME_BEFORE_USE`.
+## ✨ Features
 
-   ```ini
-   bind_address = 0.0.0.0
-   port = 28015
-   password = CHANGE_ME_BEFORE_USE   ; change this
-   ```
+* **True Source RCON:** Implements the standard Valve Source RCON protocol. Use your existing tooling without proprietary clients.
+* **Offline Administration:** Commands are dispatched natively inside the server process. No ingame admin needed.
+* **Drop-In Bundle:** Ships pre-configured with UE4SS. Just extract into `Win64`, set a password and start your server.
+* **SteamID-First:** Commands targeting players or inventories accept SteamIDs. The mod automatically resolves them to the engine's required entity IDs.
+* **Boot Gate Protection:** Safely holds incoming commands in a queue until the server is genuinely ready.
+* **Multi-Packet Replies:** Long server outputs (like `ListSpawnedVehicles`) are delivered flawlessly without truncation.
+* **Smart Routing:** Broad command coverage with automated player, location, and SteamID routing handled for you.
 
-4. Start the server. In `ue4ss\UE4SS.log`, look for the `[SCUM-RCON]` lines —
-   they report the listener address (default `0.0.0.0:28015`), or why it
-   didn't start.
+---
 
-Full step-by-step instructions are in **INSTALL.txt** inside the download.
+## ❓ Why a real RCON server?
 
-> Don't expose the RCON port to untrusted networks without a strong password
-> — Source RCON is unencrypted by design.
+While some "RCON" mods bypass the standard protocol and run commands as in-engine scripts, **SCUM-RCON** implements the actual Valve Source RCON protocol. 
 
-## Use
+* **Universal Compatibility:** Your existing tools (BattleMetrics, dashboards, bots) connect perfectly right out of the box, over the network, from anywhere.
+* **No Vendor Lock-in:** You aren't tied to a specific mod's proprietary command format or custom client. Your client, your rules.
+* **Engineered Stability:** Dispatching is handled via compiled C++ behind Structured Exception Handling guards. The authentication path is strictly audited, and the boot gate prevents commands from executing before the server is ready.
 
-The download includes a ready-to-run console — **`rcon_console.exe`**,
-a bilingual (English / German) RCON client. Double-click it, fill
-in the `ini\scum_rcon.ini` (host, port, password), then send admin
-commands as plain text:
+---
 
-```
+## 🚀 Install
+
+1.  **Download** the `Win64.zip` from the [latest release](https://github.com/herbie96x/SCUM-RCON/releases/latest).
+2.  **Extract** the contents (`dwmapi.dll` and the `ue4ss` folder) directly into your server's `SCUM\Binaries\Win64\` directory.
+3.  **Configure** your credentials. Open `ue4ss\Mods\scum_rcon\config.ini` and set a secure password. *(Note: The listener will refuse to start if the password remains `CHANGE_ME_BEFORE_USE`)*.
+
+    ```ini
+    bind_address = 127.0.0.1
+    port = 28015
+    password = CHANGE_ME_BEFORE_USE  ; Change this!
+    ```
+
+4.  **Start your server.** Check `ue4ss\UE4SS.log` for the `[SCUM-RCON]` entries to verify the listener address (default is `127.0.0.1:28015`) or to troubleshoot if it didn't start.
+
+> 🔒 **Security Note:** Source RCON is unencrypted by design. Never expose the RCON port to untrusted networks without a strong password.
+
+*For comprehensive step-by-step instructions, please refer to the **INSTALL.txt** file included in the download.*
+
+---
+
+## 💻 Use
+
+The releases includes **`rcon_console.exe`**, a ready-to-run bilingual RCON client. 
+Simply double-click it, configure `ini\scum_rcon.ini` (host, port, password) and send admin commands as plain text:
+
+```text
 rcon> Announce hello world
 rcon> ListSpawnedVehicles
 ```
 
-Any other Source RCON client (rcon-cli, BattleMetrics, a bot, …) works too —
-SCUM-RCON speaks the standard protocol.
+**Community Client Alternatives:**
+Prefer a different client? [SCUM-RCON-Client](https://github.com/Neo2Go/SCUM-RCON-Client) by @Neo2Go is a lightweight, single-binary Go client that is config-compatible with the bundled console. 
+*(Note: This is an independent community project and is used at your own discretion).*
 
-> **Community client:**
-> [SCUM-RCON-Client](https://github.com/Neo2Go/SCUM-RCON-Client) by Neo2Go is a
-> lightweight Go client (single static binary, config-compatible with the bundled
-> `rcon_console`). It's a community project — not maintained by us; use it or
-> build it from source at your own discretion.
+📚 **Read the full guide in [USAGE.md](USAGE.md)** for details on chat-color codes, SteamID command requirements, spawn-location formats, and common pitfalls.
 
-See **[USAGE.md](USAGE.md)** for the full guide — the notification and
-chat-colour codes, which commands need a player's SteamID, the three
-spawn-location forms, and the common pitfalls.
+---
 
-## Contributing & Collaboration
+## 🤝 Contributing & Collaboration
 
-Want to collaborate more closely? Open a **Collaboration request** issue. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for details.
+* **Collaboration:** Want to work together? Open a **Collaboration request** issue and review our **[CONTRIBUTING.md](CONTRIBUTING.md)**.
+* **Bugs & Questions:** Please open an issue on GitHub or post in the Nexus Mods comments/bug section on the SCUM-RCON page.
 
-## License
+---
 
-Closed-source, **free to use** under the EULA in `LICENSE`: download and run on
-your own server for free; no selling, no modifying, no redistribution outside
-the official release channel. Running it is fine as long as your server
-complies with SCUM's own EULA. The bundled UE4SS keeps its own license (MIT).
-Not affiliated with Gamepires; SCUM is a trademark of Gamepires.
+## 📄 License
 
-## Bugs & questions
+This project is closed-source, but **free to use** under the EULA found in the `LICENSE` file. 
 
-Open an issue here, or post in the Nexus Mods comments/bug section on the SCUM-RCON page.
+* **Permitted:** Downloading and running it on your own servers for free, provided your server complies with SCUM's EULA.
+* **Restricted:** Selling, modifying, or redistributing outside the official release channel.
+* **Third-Party:** The bundled UE4SS is licensed under MIT.
+
+*SCUM-RCON is an independent project and is not affiliated with Gamepires. SCUM is a trademark of Gamepires.*
