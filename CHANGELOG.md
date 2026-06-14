@@ -2,6 +2,15 @@
 
 User-facing changes. See `USAGE.md` for how to use the commands.
 
+## 0.4.1
+
+### Fixed
+
+- **`ShowNamePlates` now actually toggles in-game.** In 0.4.0 the
+  command was dispatched through the wrong pipeline that ran server-side but never replicated the
+  overlay to the client, so RCON replied `ok` while nothing happened in-game. It
+  now goes through the right path.
+
 ## 0.4.0
 
 ### New
