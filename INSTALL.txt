@@ -3,7 +3,7 @@
 ================================================================
 
 This bundle adds a Source RCON server to a SCUM dedicated server.
-It includes UE4SS + the scum_rcon mod, pre-configured and ready
+It includes UE4SS + the scum_rcon mod, pre-configured and Ready
 to drop in. You set a password, the listener comes up, and any
 standard Source RCON client can talk to it.
 
@@ -15,9 +15,9 @@ bot, ...). They all speak the same protocol.
  REQUIREMENTS
 ================================================================
 
-* A SCUM dedicated server you control.
-* A working brain
-* A RCON-Tool
+* A SCUM dedicated or local server you control.
+* A working brain.
+* A RCON tool (client)
 
 ================================================================
  QUICK-START INSTALL (5 minutes)
@@ -27,7 +27,7 @@ bot, ...). They all speak the same protocol.
    INSTALL.txt -- "dwmapi.dll" and the "ue4ss" folder) into your
    dedicated server's Win64 folder:
 
-       <ServerInstall>\SCUM\Binaries\Win64\
+   	<ServerInstall>\SCUM\Binaries\Win64\
 
    The result should look like:
 
@@ -48,20 +48,17 @@ bot, ...). They all speak the same protocol.
 
 2) Open ue4ss/Mods/scum_rcon/config.ini and set a real password:
 
-       password = use-a-real-password-here
+   	password = use-a-real-password-here
 
    The listener REFUSES to start while the password is still
    "CHANGE_ME_BEFORE_USE". The default port is 28015 (change it
    in config.ini if you like).
 
-3) Make sure BattlEye is disabled (see Requirements), then start
-   your dedicated server.
-
-4) Verify the mod loaded.
+3) Verify the mod loaded.
    Open: <Win64>\ue4ss\UE4SS.log
    Look for the banner:
 
-       [SCUM-RCON] SCUM-RCON ready - listening on 0.0.0.0:28015
+    [SCUM-RCON] SCUM-RCON ready - listening on 127.0.0.1:28015
 
    If you see "RCON listener NOT started: password is unset or
    still the default", go back to step 2.
@@ -69,9 +66,9 @@ bot, ...). They all speak the same protocol.
 5) Connect with any Source RCON client. For example, with mcrcon
    (not bundled -- download separately if you want it):
 
-       mcrcon -H <server-ip> -P 28015 -p <your-password> -t
+   	mcrcon -H <server-ip> -P 28015 -p <your-password> -t
 
-   At the prompt, type:   ListSquads
+   At the prompt, type: ListSquads
 
    Any client that speaks Source RCON works the same way.
 
@@ -79,7 +76,7 @@ bot, ...). They all speak the same protocol.
  USING THE COMMANDS
 ================================================================
 
-See USAGE.md for the full command guide:
+See USAGE.md (next to this file) for the full command guide:
 how to send commands, which commands need a player's SteamID,
 the notification and chat-colour codes, the spawn-location forms,
 and the common mistakes.
@@ -91,8 +88,6 @@ and the common mistakes.
 * USE AT YOUR OWN RISK. No warranty. No guarantee against future
   game updates breaking the mod, and no guarantee against bans.
 
-* PRIVATE SERVERS ONLY
-
 * DO NOT expose the RCON port to the open internet without a
   strong password. The protocol does not encrypt traffic.
 
@@ -100,14 +95,18 @@ and the common mistakes.
  LICENSE / CREDITS
 ================================================================
 
+Command guide: USAGE.md (next to this file)
+
 Licenses:
+
 - scum_rcon:        Proprietary EULA - free for community use, not
                     open source (see LICENSE next to this file)
 - UE4SS framework:  MIT (see ue4ss/LICENSE)
+- RCON-Client:      MIT
 
 Credits:
-- UE4SS framework by the RE-UE4SS team:
-    https://github.com/UE4SS-RE/RE-UE4SS
+
+- UE4SS framework by RE-UE4SS: https://github.com/UE4SS-RE/RE-UE4SS
 
 Not affiliated with Gamepires. SCUM is a trademark of Gamepires.
 
