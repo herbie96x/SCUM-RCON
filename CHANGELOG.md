@@ -2,6 +2,51 @@
 
 User-facing changes. See `USAGE.md` for how to use the commands.
 
+## 0.4.2
+
+### New
+
+- **Startup security-software scan.** On load, SCUM-RCON now checks whether a
+  known inline-hooking AV/EDR product (Bitdefender, Windows Defender, Kaspersky,
+  ESET, Sophos and others) has injected itself into the server process and logs
+  a clear `env-scan:` warning if so. Such products patch function prologues
+  in-process and can clash with UE4SS/RCON hooks, causing otherwise-inexplicable
+  random crashes — the warning turns that into a one-line lead in the log, with a
+  hint to exclude `ScumServer.exe` and the `ue4ss` folder from real-time
+  monitoring. Purely informational; it never blocks startup.
+- **RCON-Client v2.3: send several commands at once.** In the interactive console
+  you can now separate multiple commands with `;` and they run in order over a
+  single connection, e.g.
+  `ListPlayers ; Announce "restart in 5 min" ; SpawnItem ...`. A `;` inside a quoted
+  message does not split, so `Announce "warning; restarting soon"` stays one
+  command. Works in the piped/bot mode too.
+
+### Fixed
+
+- **Random server crashes during object lookups no longer take the whole server
+  down.** Under heavy object churn (e.g. a Lua mod polling `FindAllOf`) made
+  worse by AV inline-hooks in the process (see the `env-scan:` note above), the
+  engine's object iteration could hit a stale/freed object and access-violate,
+  killing the server. This was behind the recurring random crashes. The UE4SS
+  build shipped with SCUM-RCON is now hardened: such a fault is caught per object
+  and that single entry is skipped, so one bad object can no longer crash the
+  process. **If you run your own UE4SS or an old version update it to the bundled build to get
+  this fix.**
+- **No more mass disconnects / server freezes caused by RCON.**
+  SCUM-RCON reads a few values straight from the live `SCUM.db` (SteamID lookups,
+  entitiy ID resolver, vehicle owner). It opened the database the wrong way, which still
+  takes a SQLite read lock and that could collide with the server's own write
+  transaction, freezing the game thread until the lock cleared and timing every
+  player out at once. The database is now opened immutable, so RCON can never block the server again.
+- **Commands no longer hang on `-nobattleye` servers.** The boot-gate that holds
+  dispatch until the server is fully up used to wait for BattlEye's
+  master connection. With `-nobattleye` it never appeared, so the gate sat in its fail-open the
+  whole time. The gate now waits for SCUM's BattlEye-independent DB-writes and the fail-open 
+  timeout are now 2 min. instead of engine ticks. The "please wait" reply no longer falsely mentions BattlEye.
+- **Commands no longer return `Not authorized` to players.** The in-game
+  authorization hook was matching the wrong function after a update, so the internal
+  auth-bypass never took effect for some commands.
+
 ## 0.4.1
 
 ### Fixed
