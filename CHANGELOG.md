@@ -2,6 +2,85 @@
 
 User-facing changes. See `USAGE.md` for how to use the commands.
 
+## 0.4.5
+
+### New
+
+- **`SpawnBrenner`, `SpawnRazor` and `SpawnInventoryFullOf` can now be placed
+  freely.** These commands spawn at the caller's position and take no native
+  location argument, so over RCON they used to land at world origin `(0,0,0)`.
+  You can now give a target position three ways:
+  - **coordinates** — a `{X=.. Y=.. Z=..}` struct, keyed `x=.. y=.. z=..` (any
+    case), or bare `X Y Z` — drop the spawn at that point;
+  - **a trailing online SteamID** spawns it in front of *that* player;
+  - **neither** keeps the old behaviour (origin, or the first online player for
+    `SpawnInventoryFullOf`).
+
+  `SpawnInventoryFullOf` can finally place a **filled container at free
+  coordinates** — a long-standing community request (previously it only spawned
+  in front of an online player). Tip: for it, prefer the keyed/struct coord form
+  — its container/count arguments are numeric too, so bare trailing numbers
+  could be read as coordinates.
+
+  ```
+  SpawnBrenner "{X=132609 Y=-67805 Z=34385}"
+  SpawnRazor <SteamID>
+  SpawnInventoryFullOf <Container> <SetCount> <Item1> <Item2> … x=.. y=.. z=..
+  ```
+
+- **`ForceDropshipEncounter` / `ForceAnimalEncounter` can now be sent to
+  coordinates.** They spawn at the caller's location and had no coordinate
+  argument, so over RCON they only landed at a player (trailing SteamID) or world
+  origin. They now take the same placement forms as the spawn commands: a
+  `{X=.. Y=.. Z=..}` struct, keyed `x=.. y=.. z=..` or bare `X Y Z` are accepted.
+  `ForceAnimalEncounter` is experimental at the moment.
+
+  ```
+  ForceDropshipEncounter "{X=140220 Y=-68551 Z=34645}"
+  ```
+
+- **`Unstuck <SteamID>` — free a player stuck in terrain/geometry.** Reads the
+  player's current position and lifts them **2 m straight up** (under SCUM's
+  fall-damage threshold) via the native Teleport, so they drop free. The player
+  must be online. Same X/Y, only Z changes — no risk of flinging them across the
+  map.
+
+  ```
+  Unstuck <SteamID>
+  ```
+
+- **`DeleteActiveQuestsForUser <SteamID>` — unstick a player who is kicked on
+  every login by a broken quest.** Some quests replicate so many interactables when the
+  player logs in that the client's reliable network buffer overflows and the
+  server force-closes the connection — *before* the player can abandon the quest.
+  This command deletes that player's `active_quest` rows straight from the live `SCUM.db`,
+  clearing the offending quest so they can log back in. Run it while the affected
+  player is **offline**. The write is safe: the DB runs in WAL mode and the delete
+  runs on the RCON worker thread, so it can never stall the game thread. See
+  `USAGE.md` §11.
+
+- **`FindQuestLockouts` + `RunQuestUnstick` + Auto-Unstick — the quest-lockout
+  toolkit, now hands-free.** Where `DeleteActiveQuestsForUser` fixes one known
+  player, these handle a whole offending quest. Name it once in `config.ini`
+  (`[quests] blocked = <quest>`, comma-separated, matched by stem in any form):
+  - **`FindQuestLockouts`** (read-only) lists every player still holding a blocked
+    quest — the lockout candidates;
+  - **`RunQuestUnstick`** clears the blocked-quest rows for all of them at once,
+    with a circuit breaker (`auto_unstick_max_delete`) that aborts a too-broad
+    sweep;
+  - **Auto-Unstick** (`auto_unstick = true`, **off by default**) runs that sweep
+    once at boot, so a locked-out player is freed before they even reconnect — no
+    admin action. `auto_unstick_dry_run` previews into the log without deleting.
+
+  Every delete runs on the RCON worker thread and only
+  touches the quests you listed. See `USAGE.md` §11
+
+### Fixed
+
+- **`ListPlayers` / `ListFlags` now return their real output.** These commands send 
+  their result over a Client-RPC, not the chat path the output-capture hooked, 
+  so they hit the empty fallback even with players/flags present. That RPC is now captured too.
+
 ## 0.4.2
 
 ### New
