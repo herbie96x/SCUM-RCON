@@ -246,6 +246,87 @@ spoof. `ShowNamePlates` is the exception because it needs no such spoof.
 
 ---
 
+### 11. DeleteActiveQuestsForUser — unstick a quest login-lockout
+
+```
+DeleteActiveQuestsForUser <SteamID>
+```
+
+Deletes **all** `active_quest` rows for the given player from the live
+`SCUM.db`. Use it when a player is kicked on every login because the server
+crashes while spawning a broken quest's interactables (observed with the T3
+city-scan quest, which overflows the reliable buffer → the player is
+force-closed before they can abandon it, so the row never clears and the loop
+repeats). The player can't fix this themselves; this command can.
+
+- **Target need NOT be online** — unlike the other player commands this writes
+  the DB directly, so run it *while the affected player is logged out*, then let
+  them reconnect.
+- Reply: `deleted N active quest(s) for <SteamID>`. `N = 0` means the player had
+  no active quests (or the SteamID is unknown).
+- This is a **write** to the live DB. It is safe because SCUM runs `SCUM.db` in
+  WAL mode and the delete runs on the RCON worker thread, never the
+  game thread. Deletes *all* of that player's active quests, not just the broken
+  one — they re-acquire quests normally afterwards.
+
+#### Finding & clearing a blocked quest in bulk
+
+`DeleteActiveQuestsForUser` fixes one known player. When a whole quest is the
+culprit, name it once in `config.ini` and let the mod find/clear it for everyone:
+
+```
+[quests]
+blocked = T3_DC_Interact_ScanAbandonedCity
+```
+
+Names are matched by **stem**, so any form works — a vanilla name, a
+`Quests/Override/<name>.json` path, or a bare stem. Comma-separate several.
+
+- **`FindQuestLockouts`** — *read-only*, no SteamID. Lists every player still
+  holding a blocked quest (the lockout candidates). Use it to see who's affected
+  before clearing anything.
+- **`RunQuestUnstick`** — deletes the blocked-quest rows for **all** matching
+  players now. A circuit breaker (`auto_unstick_max_delete`) aborts the sweep if
+  more rows would go than that (guards a too-broad list). Preview with
+  `FindQuestLockouts` first.
+
+**Auto-Unstick** runs that sweep once automatically at server boot — a
+locked-out player is freed before they even try to log in, no admin action.
+**Off by default**; opt in via `config.ini`:
+
+```
+[quests]
+blocked = T3_DC_Interact_ScanAbandonedCity
+auto_unstick = false
+auto_unstick_dry_run = true      ; log what WOULD be deleted, delete nothing
+auto_unstick_max_delete = 25     ; circuit breaker
+```
+
+Safe rollout: set `blocked` → `FindQuestLockouts` to preview → `auto_unstick =
+true` with `auto_unstick_dry_run = true` and check the boot log line
+`auto-unstick (boot): N match(es), 0 deleted [dry-run]` → once it looks right,
+set `dry_run = false`. Every delete runs on the RCON worker thread (never the
+game thread) and only touches the quests you listed.
+
+---
+
+### 12. Unstuck — free a player stuck in geometry
+
+```
+Unstuck <SteamID>
+```
+
+Lifts the player **2 m straight up** from their current position (same X/Y, only
+Z changes), which is enough to pop them out of terrain/objects they are wedged
+in. 2 m is under SCUM's fall-damage threshold, so they take no damage on landing.
+
+- **Target must be online** — the mod reads the live pawn position, then runs the
+  native `Teleport` to `(x, y, z + 2 m)`.
+- Reply: `unstuck: lifted <SteamID> +2m (z <old> -> <new>)`.
+- This is the in-place **Z-lift**.
+
+---
+
 ## Quick reference: who needs a SteamID?
 
 | Command type | Trailing SteamID? | Notes |
@@ -262,7 +343,10 @@ spoof. `ShowNamePlates` is the exception because it needs no such spoof.
 | ListSpawnedVehicles | no | multi-packet reply |
 | Inventory (SpawnAndAddItems only) | **yes** | target online; Character_/Grid_* unsupported |
 | ShowNamePlates | **yes** | target need to be online |
-
+| Unstuck | **yes** | target online; +2 m Z-lift via native Teleport |
+| DeleteActiveQuestsForUser | **yes** | DB write; target should be **offline** |
+| FindQuestLockouts | no | read-only; lists players holding a `[quests] blocked` quest |
+| RunQuestUnstick | no | DB write; clears blocked-quest rows for all matching players |
 ---
 
 ## Common pitfalls
