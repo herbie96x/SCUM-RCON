@@ -22,6 +22,12 @@ Anything that speaks the Valve Source RCON protocol can connect to it. The downl
 * **Boot Gate Protection:** Safely holds incoming commands in a queue until the server is genuinely ready.
 * **Multi-Packet Replies:** Long server outputs (like `ListSpawnedVehicles`) are delivered flawlessly without truncation.
 * **Smart Routing:** Broad command coverage with automated player, location, and SteamID routing handled for you.
+* **Quest Lockout Recovery:** Frees players who are permanently kicked on every login by a broken quest — pinpoint who's affected, clear the offending quest straight from the live database, or wipe it automatically at boot.
+* **Free Placement:** Caller-anchored spawns and encounters (`SpawnBrenner`, `SpawnRazor`, `SpawnInventoryFullOf`, `ForceDropshipEncounter`, `ForceAnimalEncounter`) can be dropped at any coordinate or sent to a specific player.
+* **Player Unstuck:** Lift a player wedged in terrain or geometry 2 m straight up via native teleport — no fall damage, no flinging them across the map.
+* **Live Database Reads:** The SteamID→entity resolver, the vehicle-owner lookup and squad lists read straight from the server database — accurate no matter who's online — opened read-only so they can never block or freeze the game thread.
+* **Crash-Hardened Runtime:** The bundled UE4SS survives the stale/freed objects during iteration that previously took whole servers down and flags inline-hooking AV/EDR (Bitdefender, Defender, ESET…) that can destabilise the process.
+* **Scripted Client:** The bundled bilingual console chains commands with `;` and pauses with `sleep <seconds>` — drive a timed restart sequence from a single line, interactively or piped from a bot.
 
 ---
 
