@@ -204,7 +204,7 @@ vehicles).
 ### 9. Inventory — limited support
 
 ```
-#Inventory <PlayerId> SpawnAndAddItems <item> <count> <online-SteamID>
+#Inventory <SteamID> SpawnAndAddItems <item> <count> ...
 ```
 
 **Only `SpawnAndAddItems` works over RCON** — it grants items into the target's
