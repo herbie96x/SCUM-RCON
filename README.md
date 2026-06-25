@@ -1,9 +1,10 @@
-# SCUM-RCON
+# SCUM-RCON by skrypt.gg
 
 [![Latest release](https://img.shields.io/github/v/release/herbie96x/SCUM-RCON?label=release&color=success)](https://github.com/herbie96x/SCUM-RCON/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/herbie96x/SCUM-RCON/total?label=downloads)](https://github.com/herbie96x/SCUM-RCON/releases)
 [![License: free-to-use (EULA)](https://img.shields.io/badge/license-free--to--use%20(EULA)-brightgreen)](LICENSE)
 [![Discord](https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/HhSraTKfrW)
+[![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/skrypt)
 
 A fully compliant **Source RCON** server for SCUM dedicated servers. Execute admin commands seamlessly from any Source-RCON-compatible client—including the bundled `rcon_console`, mcrcon, rcon-cli, BattleMetrics, WebRcon, or your custom Discord bots. No in-game admin character required.
 
@@ -83,6 +84,28 @@ Prefer a different client? [SCUM-RCON-Client](https://github.com/Neo2Go/SCUM-RCO
 
 * **Collaboration:** Want to work together? Open a **Collaboration request** issue and review our **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 * **Bugs & Questions:** Please open an issue on GitHub or post in the Nexus Mods comments/bug section on the SCUM-RCON page.
+
+---
+
+## ⚡ Support & Early Access — The Zero-Day Tier
+
+SCUM-RCON is free, and it always will be. That doesn't change.
+
+Here's what does: every SCUM patch eventually breaks RCON. You know the drill — an update drops and tools and mods go dark for days. Getting it working
+again means immediate, deep reverse-engineering to repair the Mod.
+
+To keep that sustainable, there's now the **Zero-Day Tier** on Ko-fi (€3.5/mo):
+
+* **Zero-Day (EA) Supporters** get every patch-fix first — right in the critical window after an update, when downtime hurts most.
+* **Everyone else** gets the exact same fix for free — just a few days later, once it's verified stable.
+
+You're not paying for RCON. You're paying to skip the line, cut your server's downtime, and fund the hardware and upkeep that keep this project alive.
+Don't want to? You still get everything, 100% free, exactly as before.
+
+Only need the fast fix for one patch? Subscribe, grab it, cancel anytime — that's completely fine. You supported the project exactly when it helped you.
+
+If the tool's worth something to you → **[Support on Ko-fi](https://ko-fi.com/skrypt)**.
+If not, no hard feelings — it's all still yours.
 
 ---
 
