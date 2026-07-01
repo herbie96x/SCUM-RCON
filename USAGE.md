@@ -152,31 +152,59 @@ SpawnItem Apple 1 Location 289265 -188112 15217
 > mistake is `Location "289265 -188112 15217"` (three bare numbers in quotes) —
 > that is **not** valid; use one of the three forms above.
 
-**`SpawnInventoryFullOf`** is the exception that has **no `Location`**: it spawns
-a container and fills it, and SCUM always places it **in front of the player**.
-Over RCON it is therefore routed through an online player, so **at least one player must be online**, 
-and the container appears in front of *that* player.
+**Caller-anchored spawns without a native `Location`** —
+`SpawnInventoryFullOf`, `SpawnBrenner`, `SpawnRazor`. SCUM spawns these at the
+invoking player's position, so they have **no `Location` parameter of their
+own** and over RCON used to land at world origin. The mod fills that gap by
+positioning its dispatch context for you — the same placement forms as above,
+given at the **end** of the line:
+
+- **coordinates** (a `{X=.. Y=.. Z=..}` struct, keyed `x=.. y=.. z=..` any case,
+  or bare `X Y Z`) — spawns at that point;
+- **a trailing online SteamID** — spawns in front of *that* player;
+- **neither** — origin for `SpawnBrenner` / `SpawnRazor`; the first online
+  player for `SpawnInventoryFullOf`.
 
 ```
+SpawnBrenner "{X=132609 Y=-67805 Z=34385}"
+SpawnRazor <SteamID>
+SpawnInventoryFullOf <Container> <SetCount> <Item1> <Item2> … x=.. y=.. z=..
 SpawnInventoryFullOf <Container> <SetCount> <Item1> <Item2> … <SteamID>
-SpawnInventoryFullOf Improvised_Metal_Chest 1 Weapon_AKM 3
 SpawnInventoryFullOf Improvised_Metal_Chest 1 Weapon_AKM 3 76561XXXXXXXXXXXX
 ```
 
-`<SetCount>` is how many times the whole item set is placed into the container.
-**Multiple item names are allowed** — each is added to the container.
+For `SpawnInventoryFullOf`, `<SetCount>` is how many times the whole item set is
+placed into the container, and **multiple item names are allowed**. Prefer the
+keyed/struct coord form for it — its container/count arguments are numeric too,
+so bare trailing numbers could be mistaken for coordinates.
 
 ### 6. Encounters at a player (`ForceDropshipEncounter`, `ForceAnimalEncounter`)
 
-These spawn an encounter at a **player's location** and take **no** coordinate
-argument. Over RCON, append the target player's **SteamID** so the encounter spawns at *that* player.
-Without an online player it falls back to world origin.
+> **⚠️ Experimental.** The coordinate routing goes through a synthetic caller.
+> `ForceDropshipEncounter` is confirmed working. `ForceAnimalEncounter` runs and
+> spawns at the point too, but the animals appear **on the ground at the coords**
+> (you must be there to see them), and exact behaviour can vary by encounter.
+
+These spawn an encounter at a location and have **no native coordinate
+argument**, so over RCON the mod gives you three ways to place them (same forms
+as the spawn commands in section 5):
+
+- **coordinates** — `{X=.. Y=.. Z=..}` struct, keyed `x=.. y=.. z=..`, or bare
+  `X Y Z` — drop the encounter at that point (the mod positions a synthetic
+  caller there);
+- **a trailing online SteamID** — at *that* player;
+- **neither** — first online player, else world origin.
 
 ```
+ForceDropshipEncounter "{X=140220 Y=-68551 Z=34645}"
+ForceDropshipEncounter x=140220 y=-68551 z=34645
+ForceAnimalEncounter "{X=140220 Y=-68551 Z=34645}"
 ForceDropshipEncounter <SteamID>
 ForceAnimalEncounter <SteamID>
-ForceDropshipEncounter 76561XXXXXXXXXXXX
 ```
+
+> Use coordinates **or** a SteamID, not both — a 17-digit SteamID appended after
+> coordinates would be misread as a coordinate.
 
 > Commands that destroy/clear "within radius" or "at player location"
 > (`DestroyCorpsesWithinRadius`, `DestroyZombiesWithinRadius`, …) instead take an
@@ -194,6 +222,13 @@ Unsilence <SteamID>
 
 Most list commands (`ListPlayers`, `ListSquads`, `ListMutedPlayers`, …) run.
 
+`ListPlayers`, `ListSquads`, `ListSpawnedVehicles` and `ListSpawnedAnimals` read
+their data directly (a native object-array walk or a `SCUM.db` query), so they
+keep returning real output after SCUM 1.3.1 broke the old client-RPC reply path.
+`ListSpawnedVehicles` now also reports each vehicle's **custom name** and its
+**owner's database id**, not just the model; `ListSquads` resolves all members in
+one bulk query instead of a request per member.
+
 **`ListSpawnedVehicles` is the exception**. Because the list can be long, the reply
 may exceed Source-RCON's 4096-byte per-packet limit and is then split across
 **multiple packets** (same request id). Use an RCON client that supports
@@ -204,7 +239,7 @@ vehicles).
 ### 9. Inventory — limited support
 
 ```
-#Inventory <SteamID> SpawnAndAddItems <item> <count> ...
+#Inventory <PlayerId> SpawnAndAddItems <item> <count> <online-SteamID>
 ```
 
 **Only `SpawnAndAddItems` works over RCON** — it grants items into the target's
@@ -265,7 +300,8 @@ repeats). The player can't fix this themselves; this command can.
 - Reply: `deleted N active quest(s) for <SteamID>`. `N = 0` means the player had
   no active quests (or the SteamID is unknown).
 - This is a **write** to the live DB. It is safe because SCUM runs `SCUM.db` in
-  WAL mode and the delete runs on the RCON worker thread, never the
+  WAL mode (a second writer only contends on the short write lock, never blocks
+  the server's reads) and the delete runs on the RCON worker thread, never the
   game thread. Deletes *all* of that player's active quests, not just the broken
   one — they re-acquire quests normally afterwards.
 
@@ -297,7 +333,7 @@ locked-out player is freed before they even try to log in, no admin action.
 ```
 [quests]
 blocked = T3_DC_Interact_ScanAbandonedCity
-auto_unstick = false
+auto_unstick = true
 auto_unstick_dry_run = true      ; log what WOULD be deleted, delete nothing
 auto_unstick_max_delete = 25     ; circuit breaker
 ```
@@ -323,7 +359,73 @@ in. 2 m is under SCUM's fall-damage threshold, so they take no damage on landing
 - **Target must be online** — the mod reads the live pawn position, then runs the
   native `Teleport` to `(x, y, z + 2 m)`.
 - Reply: `unstuck: lifted <SteamID> +2m (z <old> -> <new>)`.
-- This is the in-place **Z-lift**.
+- This is the in-place **Z-lift**. The web panel's player modal additionally
+  offers a *history-aware* unstuck (teleport to the last safe position from the
+  movement trail) — that one stays panel-side.
+
+---
+
+### 13. Whois — instant player dossier from the DB
+
+```
+Whois <SteamID | name>
+```
+
+Reads a full profile straight from the live `SCUM.db` — **the player need not be
+online**. Accepts a 17-digit SteamID or a (partial) character name.
+
+Reply (one dossier, several lines):
+
+```
+Whois: <name>  (SteamID <steam>)
+  Fame: <n>   Money: <n>
+  Kills: <n>  Deaths: <n>  K/D: <r>  Puppets: <n>  HS: <n>
+  Playtime: <h> h
+  Squad: <name | ->
+  Vehicles owned: <n>
+```
+
+- **Read-only** — never writes the DB.
+- **Schema-robust** — it probes the DB layout at runtime; a missing table or
+  column degrades to `0` / `-` instead of erroring, so a SCUM schema change
+  won't break it.
+- `No player found for "<query>".` means the name/SteamID didn't resolve.
+
+---
+
+### 14. Sentry / mech area-control
+
+Enumerate and clear the roaming military mechs (`ASentry2`) that no external tool
+can reach — these walk the live object array in-process.
+
+```
+ListSentries
+DestroySentriesWithinRadius <radius> <x> <y> <z>
+RespawnSentriesWithinRadius <radius> <x> <y> <z>
+SuppressSentryRespawn <on|off>
+```
+
+- **`ListSentries`** — every *active* sentry with world position. Sentries
+  reporting origin `(0,0,0)` are destroyed/deactivated corpses still awaiting GC
+  and are filtered out, so the list is the live mechs only.
+- **`DestroySentriesWithinRadius <radius> <x> <y> <z>`** — destroys every sentry
+  within `radius` cm of the point. It turns suppression **on first** (see the
+  warning), so the cleared mechs don't instantly respawn and don't provoke a
+  defender horde. One command → a mech-free event zone.
+- **`RespawnSentriesWithinRadius`** — lifts the suppression again; the mechs
+  return. (The radius args are kept for symmetry; the suppression it reverses is
+  global.)
+- **`SuppressSentryRespawn <on|off>`** — the manual switch for that same
+  suppression, on its own.
+
+> ⚠️ **Suppression is GLOBAL, not per-radius.** It works by freezing the single
+> server-wide guarded-zone manager, so while it's on, the whole military
+> guarded-zone system pauses **everywhere on the map**: no sentry respawns in any
+> guarded zone, and shooting sentries no longer triggers the defender-horde
+> response. Nothing is deleted or reconfigured; mechs already spawned keep acting
+> on their own AI; abandoned bunkers and cargo/convoy encounters are separate
+> systems and keep running. Always lift it after your event
+> (`RespawnSentriesWithinRadius` or `SuppressSentryRespawn off`).
 
 ---
 
@@ -337,8 +439,9 @@ in. 2 m is under SCUM's fall-damage threshold, so they take no damage on landing
 | SendChat | **yes** | target must be online |
 | Spawn at player | **yes** (as `Location`) | or a coord struct / bare X Y Z |
 | Spawn at coords | no | use `Location "{…}"` or `Location X Y Z` |
-| SpawnInventoryFullOf | optional | SteamID = target player (dropped from items); else first online; ≥1 player online |
-| ForceDropship/AnimalEncounter | optional | SteamID = target player; else first online; no coord arg |
+| SpawnInventoryFullOf | optional | coords (keyed/struct) place it freely; SteamID = at that player; else first online |
+| SpawnBrenner / SpawnRazor | optional | coords place it; SteamID = at that player; else world origin |
+| ForceDropship/AnimalEncounter | optional | coords (keyed/struct) place it freely; SteamID = at that player; else first online |
 | Silence / Unsilence | **yes** | |
 | ListSpawnedVehicles | no | multi-packet reply |
 | Inventory (SpawnAndAddItems only) | **yes** | target online; Character_/Grid_* unsupported |
@@ -347,6 +450,12 @@ in. 2 m is under SCUM's fall-damage threshold, so they take no damage on landing
 | DeleteActiveQuestsForUser | **yes** | DB write; target should be **offline** |
 | FindQuestLockouts | no | read-only; lists players holding a `[quests] blocked` quest |
 | RunQuestUnstick | no | DB write; clears blocked-quest rows for all matching players |
+| Whois | no | read-only DB dossier; accepts a SteamID **or** a name; target may be offline |
+| ListSentries | no | active sentries only (`0,0,0` corpses filtered) |
+| DestroySentriesWithinRadius | no | args `<radius> <x> <y> <z>`; auto-suppresses respawn first |
+| RespawnSentriesWithinRadius | no | lifts suppression (global) — mechs return |
+| SuppressSentryRespawn | no | `<on\|off>`; **global** guarded-zone freeze |
+
 ---
 
 ## Common pitfalls
@@ -380,3 +489,7 @@ in. 2 m is under SCUM's fall-damage threshold, so they take no damage on landing
 - **A player got banned after I gave them `SetGodMode`** — expected for a
   non-admin: free-building while godmoded trips SCUM's own anti-cheat. Only
   godmode real server admins (see the warning under section 2).
+- **Sentries won't respawn anywhere on the map** — suppression from
+  `SuppressSentryRespawn on` / `DestroySentriesWithinRadius` is **global**, not
+  scoped to your radius (see section 14). Lift it with
+  `RespawnSentriesWithinRadius` or `SuppressSentryRespawn off`.
