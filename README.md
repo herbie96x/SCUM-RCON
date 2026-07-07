@@ -29,6 +29,7 @@ Anything that speaks the Valve Source RCON protocol can connect to it. The downl
 * **Live Database Reads:** The SteamID→entity resolver, the vehicle-owner lookup and squad lists read straight from the server database — accurate no matter who's online — opened read-only so they can never block or freeze the game thread.
 * **Crash-Hardened Runtime:** The bundled UE4SS survives the stale/freed objects during iteration that previously took whole servers down and flags inline-hooking AV/EDR (Bitdefender, Defender, ESET…) that can destabilise the process.
 * **Scripted Client:** The bundled bilingual console chains commands with `;` and pauses with `sleep <seconds>` — drive a timed restart sequence from a single line, interactively or piped from a bot.
+* **Automatic Installer:** Use the `SCUM-RCON-Setup-0.X.X.exe` for a quick and easy installation. No more tedious manual file transfers needed.
 
 ---
 
