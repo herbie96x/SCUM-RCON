@@ -115,9 +115,19 @@ If not, no hard feelings.
 
 ---
 
+## 💰 Commercial use
+
+The free EULA covers **personal, non-commercial** server operation. Running SCUM-RCON on your own server — even a donation-funded community one — is free.
+
+If you want to **integrate SCUM-RCON into a commercial product** (a paid panel, hosting service, management platform, or any offering that charges for access to
+features it enables), that needs a separate **commercial license**. I'm open for dual-licensing; revenue-based or a flat arrangement, whatever fits the
+project. See [`COMMERCIAL-LICENSE-TEMPLATE.md`](COMMERCIAL-LICENSE-TEMPLATE.md) for the shape of such an agreement.
+
+Reach out to discuss on Discord.
+
 ## 📄 License
 
-This project is closed-source but **free to use** under the EULA found in the `LICENSE` file. 
+This project is closed-source but **free to use** for personal, non-commercial users under the EULA found in the `LICENSE` file. 
 
 * **Permitted:** Downloading and running it on your own servers for free, provided your server complies with SCUM's EULA.
 * **Restricted:** Selling, modifying, or redistributing outside the official release channel.
