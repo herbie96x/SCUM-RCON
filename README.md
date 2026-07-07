@@ -44,6 +44,20 @@ While some "RCON" mods bypass the standard protocol and run commands as in-engin
 
 ## 🚀 Install
 
+1.  **Download** the `SCUM-RCON-Setup-0.4.6.exe` from the release section.
+2.  **Double-click** the Setup.exe.
+3.  **Choose** for with **user scope** it should get installed.
+4.  **Select** your preferred **language** (en/de).
+5.  **Select** the desired **installation folder for RCON and installation scope**; you can install just the mod or the entire bundle, including the console and tester GUI. The installer will automatically detect the SCUM Server installation; adjust the path if necessary.
+6.  **Configure** your desired **settings**, such as `IP`, `port`, `password`, and `max. connections`.
+7.  You can optionally let the installer create a desktop shortcut.
+8.  The installer is now installing.
+9.  **done.**
+
+---
+
+## ⚙️ Manual Install
+
 1.  **Download** the `Win64.zip` from the [latest release](https://github.com/herbie96x/SCUM-RCON/releases/latest).
 2.  **Extract** the contents (`dwmapi.dll` and the `ue4ss` folder) directly into your server's `SCUM\Binaries\Win64\` directory.
 3.  **Configure** your credentials. Open `ue4ss\Mods\scum_rcon\config.ini` and set a secure password. *(Note: The listener will refuse to start if the password remains `CHANGE_ME_BEFORE_USE`)*.
@@ -58,25 +72,13 @@ While some "RCON" mods bypass the standard protocol and run commands as in-engin
 
 > 🔒 **Security Note:** Source RCON is unencrypted by design. Never expose the RCON port to untrusted networks without a strong password.
 
-*For comprehensive step-by-step instructions, please refer to the **INSTALL.txt** file included in the download.*
+*For comprehensive step-by-step instructions, please refer to the **MANUAL_INSTALL.txt** file included in the download.*
 
 ---
 
 ## 💻 Use
 
-The releases includes **`rcon_console.exe`**, a ready-to-run bilingual RCON client. 
-Simply double-click it, configure `ini\scum_rcon.ini` (host, port, password) and send admin commands as plain text:
-
-```text
-rcon> Announce hello world
-rcon> ListSpawnedVehicles
-```
-
-**Community Client Alternatives:**
-Prefer a different client? [SCUM-RCON-Client](https://github.com/Neo2Go/SCUM-RCON-Client) by @Neo2Go is a lightweight, single-binary Go client that is config-compatible with the bundled console. 
-*(Note: This is an independent community project and is used at your own discretion).*
-
-📚 **Read the full guide in [USAGE.md](USAGE.md)** for details on chat-color codes, SteamID command requirements, spawn-location formats, and common pitfalls.
+📚 **Read the guide in [USAGE.md](USAGE.md)** for details on chat-color codes, SteamID command requirements, spawn-location formats, and common pitfalls.
 
 ---
 
@@ -85,11 +87,15 @@ Prefer a different client? [SCUM-RCON-Client](https://github.com/Neo2Go/SCUM-RCO
 * **Collaboration:** Want to work together? Open a **Collaboration request** issue and review our **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 * **Bugs & Questions:** Please open an issue on GitHub or post in the Nexus Mods comments/bug section on the SCUM-RCON page.
 
+**Community Client Alternatives:**
+Prefer a different client? [SCUM-RCON-Client](https://github.com/Neo2Go/SCUM-RCON-Client) by @Neo2Go is a lightweight, single-binary Go client that is config-compatible with the bundled console. 
+*(Note: This is an independent community project and is used at your own discretion).*
+
 ---
 
-## ⚡ Support & Early Access — The Zero-Day Tier
+## ⚡ Support & Early Access: The Zero-Day Tier
 
-SCUM-RCON is free, and it always will be. That doesn't change.
+SCUM-RCON is free and it always will be. That doesn't change.
 
 Here's what does: every SCUM patch eventually breaks RCON. You know the drill — an update drops and tools and mods go dark for days. Getting it working
 again means immediate, deep reverse-engineering to repair the Mod.
@@ -105,13 +111,13 @@ Don't want to? You still get everything, 100% free, exactly as before.
 Only need the fast fix for one patch? Subscribe, grab it, cancel anytime — that's completely fine. You supported the project exactly when it helped you.
 
 If the tool's worth something to you → **[Support on Ko-fi](https://ko-fi.com/skrypt)**.
-If not, no hard feelings — it's all still yours.
+If not, no hard feelings.
 
 ---
 
 ## 📄 License
 
-This project is closed-source, but **free to use** under the EULA found in the `LICENSE` file. 
+This project is closed-source but **free to use** under the EULA found in the `LICENSE` file. 
 
 * **Permitted:** Downloading and running it on your own servers for free, provided your server complies with SCUM's EULA.
 * **Restricted:** Selling, modifying, or redistributing outside the official release channel.
