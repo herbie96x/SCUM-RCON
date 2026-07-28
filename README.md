@@ -6,11 +6,24 @@
 [![Discord](https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/HhSraTKfrW)
 [![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/skrypt)
 
+
 A fully compliant **Source RCON** server for SCUM dedicated servers. Execute admin commands seamlessly from any Source-RCON-compatible client—including the bundled `rcon_console`, mcrcon, rcon-cli, BattleMetrics, WebRcon, or your custom Discord bots. No in-game admin character required.
 
 Anything that speaks the Valve Source RCON protocol can connect to it. The download is a drop-in bundle that includes UE4SS, meaning there is absolutely no additional setup or dependencies required.
 
 > ⚠️ **Disclaimer:** Use at your own risk. There is no warranty or guarantee against future game updates breaking the mod, or against potential bans.
+
+---
+
+## 🛑 Important Notice: Release Status & Anti-Theft Measures
+
+**Due to repeated unauthorized commercial bundling and blatant violations of the EULA, all previous public release binaries have been temporarily removed.**
+
+While my commitment to providing this tool completely free of charge for the regular gaming community remains unchanged, the continuous "ripping" of this project by monetized third-party apps and installers has forced me to take action. 
+
+A new update will be released soon. To protect the integrity of my work, all future builds will be shipped with **heavy branding** (including mandatory in-game and console watermarks) and **strict low-level runtime protections** to prevent unauthorized redistribution.
+
+> ⚖️ **Zero-Tolerance Policy:** If you are running a monetized product, paid installer, or commercial hosting service, you **must** obtain a dual-licensing agreement. Any future commercial project, bundled software, or server found utilizing SCUM-RCON without an appropriate license will face an **immediate DMCA takedown** directed at their hosting provider and domain registrar—**without any prior warning.**
 
 ---
 
