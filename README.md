@@ -15,34 +15,24 @@ Anything that speaks the Valve Source RCON protocol can connect to it. The downl
 
 ---
 
-## 🛑 Important Notice: Release Status & Anti-Theft Measures
-
-**Due to repeated unauthorized commercial bundling and blatant violations of the EULA, all previous public release binaries have been temporarily removed.**
-
-While my commitment to providing this tool completely free of charge for the regular gaming community remains unchanged, the continuous "ripping" of this project by monetized third-party apps and installers has forced me to take action. 
-
-A new update will be released soon. To protect the integrity of my work, all future builds will be shipped with **heavy branding** (including mandatory in-game and console watermarks) and **strict low-level runtime protections** to prevent unauthorized redistribution.
-
 > ⚖️ **Zero-Tolerance Policy:** If you are running a monetized product, paid installer, or commercial hosting service, you **must** obtain a dual-licensing agreement. Any future commercial project, bundled software, or server found utilizing SCUM-RCON without an appropriate license will face an **immediate DMCA takedown** directed at their hosting provider and domain registrar—**without any prior warning.**
 
 ---
 
 ## ✨ Features
 
-* **True Source RCON:** Implements the standard Valve Source RCON protocol. Use your existing tooling without proprietary clients.
-* **Offline Administration:** Commands are dispatched natively inside the server process. No ingame admin needed.
-* **Drop-In Bundle:** Ships pre-configured with UE4SS. Just extract into `Win64`, set a password and start your server.
-* **SteamID-First:** Commands targeting players or inventories accept SteamIDs. The mod automatically resolves them to the engine's required entity IDs.
-* **Boot Gate Protection:** Safely holds incoming commands in a queue until the server is genuinely ready.
-* **Multi-Packet Replies:** Long server outputs (like `ListSpawnedVehicles`) are delivered flawlessly without truncation.
-* **Smart Routing:** Broad command coverage with automated player, location, and SteamID routing handled for you.
+* **True Source RCON:** Implements the standard Valve Source RCON protocol — use your existing tooling, no proprietary client. Long replies (like `ListSpawnedVehicles`) are split across packets instead of truncated.
+* **In-Game Commands:** Every SCUM-RCON command also works straight from the in-game admin chat as `#CountItemsWithinRadius …`, `#SetEnv …`, `#Whois …`. Admin-gated against your `AdminUsers.ini`, and it stays out of the way of vanilla commands.
+* **Write Your Own Commands:** A plugin API lets any UE4SS **Lua** mod add commands to SCUM-RCON — a few lines, nothing to compile. Your command answers over RCON and in-game, is told who ran it (SteamID, admin status), and can be admin-only or open to every player. C++ mods get the same through an exported C interface.
+* **Live Survival Tuning:** Change how fast players get **wet**, **dry off**, get **rained on** and get **dirty** while the server runs — no restart. Set the defaults in `config.ini`, adjust on the fly with `SetEnv`.
+* **SteamID-First Routing:** Commands targeting players or inventories take plain SteamIDs; the mod resolves them to the entity IDs the engine wants and picks the right dispatch path (player, location, or direct) for you.
+* **Free Placement:** Caller-anchored spawns and encounters (`SpawnBrenner`, `SpawnRazor`, `SpawnInventoryFullOf`, `ForceDropshipEncounter`, `ForceAnimalEncounter`) can be dropped at any coordinate or sent to a specific player instead of landing at world origin — optionally snapped to the terrain so nothing floats or clips under it.
 * **Quest Lockout Recovery:** Frees players who are permanently kicked on every login by a broken quest — pinpoint who's affected, clear the offending quest straight from the live database, or wipe it automatically at boot.
-* **Free Placement:** Caller-anchored spawns and encounters (`SpawnBrenner`, `SpawnRazor`, `SpawnInventoryFullOf`, `ForceDropshipEncounter`, `ForceAnimalEncounter`) can be dropped at any coordinate or sent to a specific player.
 * **Player Unstuck:** Lift a player wedged in terrain or geometry 2 m straight up via native teleport — no fall damage, no flinging them across the map.
-* **Live Database Reads:** The SteamID→entity resolver, the vehicle-owner lookup and squad lists read straight from the server database — accurate no matter who's online — opened read-only so they can never block or freeze the game thread.
-* **Crash-Hardened Runtime:** The bundled UE4SS survives the stale/freed objects during iteration that previously took whole servers down and flags inline-hooking AV/EDR (Bitdefender, Defender, ESET…) that can destabilise the process.
-* **Scripted Client:** The bundled bilingual console chains commands with `;` and pauses with `sleep <seconds>` — drive a timed restart sequence from a single line, interactively or piped from a bot.
-* **Automatic Installer:** Use the `SCUM-RCON-Setup-0.X.X.exe` for a quick and easy installation. No more tedious manual file transfers needed.
+* **Live Database Reads:** Player lookups, vehicle owners, squads and flags read straight from the server database — accurate no matter who's online, opened read-only, and answered without ever touching the game thread.
+* **Hardened Runtime:** Commands are held until the server is genuinely up. Wrong RCON passwords cost the caller a second and lock the address out after five tries; silent connections can't squat the listener. The bundled UE4SS survives the stale-object iteration that used to take whole servers down, and inline-hooking AV/EDR (Defender, Bitdefender, ESET…) is flagged in the log.
+* **Scripted Client:** The bundled bilingual (EN/DE) console chains commands with `;` and pauses with `sleep <seconds>` — drive a timed restart sequence from a single line, interactively or piped from a bot.
+* **Drop-In Install:** Extract the bundle into `Win64`, set a password, start the server — UE4SS is included and pre-configured. Or run `SCUM-RCON-Setup-0.X.X.exe` and let the installer place everything for you.
 
 ---
 
@@ -50,7 +40,7 @@ A new update will be released soon. To protect the integrity of my work, all fut
 
 While some "RCON" mods bypass the standard protocol and run commands as in-engine scripts, **SCUM-RCON** implements the actual Valve Source RCON protocol. 
 
-* **Universal Compatibility:** Your existing tools (BattleMetrics, dashboards, bots) connect perfectly right out of the box, over the network, from anywhere.
+* **Universal Compatibility:** Your existing tools (client, dashboards, bots) connect perfectly right out of the box, over the network, from anywhere.
 * **No Vendor Lock-in:** You aren't tied to a specific mod's proprietary command format or custom client. Your client, your rules.
 * **Engineered Stability:** Dispatching is handled via compiled C++ behind Structured Exception Handling guards. The authentication path is strictly audited, and the boot gate prevents commands from executing before the server is ready.
 
