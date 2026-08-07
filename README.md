@@ -17,18 +17,18 @@ Anything that speaks the Valve Source RCON protocol can connect to it. The downl
 
 ---
 
-## ✨ Features
+## Features
 
 * **True Source RCON:** Implements the standard Valve Source RCON protocol — use your existing tooling, no proprietary client. Long replies (like `ListSpawnedVehicles`) are split across packets instead of truncated.
 * **In-Game Commands:** Every SCUM-RCON command also works straight from the in-game admin chat as `#CountItemsWithinRadius …`, `#SetEnv …`, `#Whois …`. Admin-gated against your `AdminUsers.ini`, and it stays out of the way of vanilla commands.
-* **Write Your Own Commands:** A plugin API lets any UE4SS **Lua** mod add commands to SCUM-RCON — a few lines, nothing to compile. Your command answers over RCON and in-game, is told who ran it (SteamID, admin status), and can be admin-only or open to every player. C++ mods get the same through an exported C interface.
+* **Write Your Own Commands:** A plugin API lets any UE4SS **Lua** mod add commands to SCUM-RCON — a few lines, nothing to compile. Your command answers over RCON and in-game, is told who ran it (SteamID, admin status), and can be admin-only or open to every player. `LuaReload <mod>` reloads your script live, so you iterate without restarting the server. C++ mods get the same through an exported C interface.
 * **Live Survival Tuning:** Change how fast players get **wet**, **dry off**, get **rained on** and get **dirty** while the server runs — no restart. Set the defaults in `config.ini`, adjust on the fly with `SetEnv`.
-* **SteamID-First Routing:** Commands targeting players or inventories take plain SteamIDs; the mod resolves them to the entity IDs the engine wants and picks the right dispatch path (player, location, or direct) for you.
+* **SteamID-First Routing:** Commands targeting players or inventories take plain SteamIDs; the mod resolves them to the entity IDs the engine wants and picks the right dispatch path (player, location, or direct) for you. Spawn commands need a player as their context — name one in `config.ini` and their confirmation lines stop popping up on whichever player happened to be online.
 * **Free Placement:** Caller-anchored spawns and encounters (`SpawnBrenner`, `SpawnRazor`, `SpawnInventoryFullOf`, `ForceDropshipEncounter`, `ForceAnimalEncounter`) can be dropped at any coordinate or sent to a specific player instead of landing at world origin — optionally snapped to the terrain so nothing floats or clips under it.
 * **Quest Lockout Recovery:** Frees players who are permanently kicked on every login by a broken quest — pinpoint who's affected, clear the offending quest straight from the live database, or wipe it automatically at boot.
 * **Player Unstuck:** Lift a player wedged in terrain or geometry 2 m straight up via native teleport — no fall damage, no flinging them across the map.
 * **Live Database Reads:** Player lookups, vehicle owners, squads and flags read straight from the server database — accurate no matter who's online, opened read-only, and answered without ever touching the game thread.
-* **Hardened Runtime:** Commands are held until the server is genuinely up. Wrong RCON passwords cost the caller a second and lock the address out after five tries; silent connections can't squat the listener. The bundled UE4SS survives the stale-object iteration that used to take whole servers down, and inline-hooking AV/EDR (Defender, Bitdefender, ESET…) is flagged in the log.
+* **Hardened Runtime:** Commands sent before the world is up are answered straight away instead of hanging. Wrong RCON passwords cost the caller a second and lock the address out after five tries; silent connections can't squat the listener. Works on servers where AV/EDR (Defender, Bitdefender, ESET…) has rewritten the game's code in memory, and the bundled UE4SS survives the stale-object iteration that used to take whole servers down.
 * **Scripted Client:** The bundled bilingual (EN/DE) console chains commands with `;` and pauses with `sleep <seconds>` — drive a timed restart sequence from a single line, interactively or piped from a bot.
 * **Drop-In Install:** Extract the bundle into `Win64`, set a password, start the server — UE4SS is included and pre-configured. Or run `SCUM-RCON-Setup-0.X.X.exe` and let the installer place everything for you.
 
