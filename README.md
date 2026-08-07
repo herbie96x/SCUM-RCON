@@ -7,15 +7,13 @@
 [![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/skrypt)
 
 
-A fully compliant **Source RCON** server for SCUM dedicated servers. Execute admin commands seamlessly from any Source-RCON-compatible client—including the bundled `rcon_console`, mcrcon, rcon-cli, BattleMetrics, WebRcon, or your custom Discord bots. No in-game admin character required.
+A fully compliant **Source RCON** server for SCUM dedicated servers. Execute admin commands seamlessly from any Source-RCON-compatible client—including the bundled `rcon_console`, mcrcon, rcon-cli, WebRcon, or your custom Discord bots. No in-game admin character required.
 
 Anything that speaks the Valve Source RCON protocol can connect to it. The download is a drop-in bundle that includes UE4SS, meaning there is absolutely no additional setup or dependencies required.
 
 > ⚠️ **Disclaimer:** Use at your own risk. There is no warranty or guarantee against future game updates breaking the mod, or against potential bans.
 
----
-
-> ⚖️ **Zero-Tolerance Policy:** If you are running a monetized product, paid installer, or commercial hosting service, you **must** obtain a dual-licensing agreement. Any future commercial project, bundled software, or server found utilizing SCUM-RCON without an appropriate license will face an **immediate DMCA takedown** directed at their hosting provider and domain registrar—**without any prior warning.**
+> ⚖️ **Zero-Tolerance Policy:** SCUM-RCON is free for server owners and not licensed for commercial use — there is no paid tier, and no commercial license is available. Any monetized product, paid installer, bundled software, or commercial hosting service found shipping or integrating SCUM-RCON will face an immediate DMCA takedown directed at their hosting provider and domain registrar — **without any prior warning**.
 
 ---
 
@@ -48,7 +46,7 @@ While some "RCON" mods bypass the standard protocol and run commands as in-engin
 
 ## 🚀 Install
 
-1.  **Download** the `SCUM-RCON-Setup-0.4.6.exe` from the release section.
+1.  **Download** the `SCUM-RCON-Setup-X.X.X.exe` from the release section.
 2.  **Double-click** the Setup.exe.
 3.  **Choose** for with **user scope** it should get installed.
 4.  **Select** your preferred **language** (en/de).
@@ -56,7 +54,6 @@ While some "RCON" mods bypass the standard protocol and run commands as in-engin
 6.  **Configure** your desired **settings**, such as `IP`, `port`, `password`, and `max. connections`.
 7.  You can optionally let the installer create a desktop shortcut.
 8.  The installer is now installing.
-9.  **done.**
 
 ---
 
@@ -76,24 +73,13 @@ While some "RCON" mods bypass the standard protocol and run commands as in-engin
 
 > 🔒 **Security Note:** Source RCON is unencrypted by design. Never expose the RCON port to untrusted networks without a strong password.
 
-*For comprehensive step-by-step instructions, please refer to the **MANUAL_INSTALL.txt** file included in the download.*
+*For comprehensive step-by-step instructions, please refer to the **MANUAL_INSTALL.txt** file included in the download. The easiest way is to use the installer.*
 
 ---
 
 ## 💻 Use
 
 📚 **Read the guide in [USAGE.md](USAGE.md)** for details on chat-color codes, SteamID command requirements, spawn-location formats, and common pitfalls.
-
----
-
-## 🤝 Contributing & Collaboration
-
-* **Collaboration:** Want to work together? Open a **Collaboration request** issue and review our **[CONTRIBUTING.md](CONTRIBUTING.md)**.
-* **Bugs & Questions:** Please open an issue on GitHub or post in the Nexus Mods comments/bug section on the SCUM-RCON page.
-
-**Community Client Alternatives:**
-Prefer a different client? [SCUM-RCON-Client](https://github.com/Neo2Go/SCUM-RCON-Client) by @Neo2Go is a lightweight, single-binary Go client that is config-compatible with the bundled console. 
-*(Note: This is an independent community project and is used at your own discretion).*
 
 ---
 
@@ -118,16 +104,6 @@ If the tool's worth something to you → **[Support on Ko-fi](https://ko-fi.com/
 If not, no hard feelings.
 
 ---
-
-## 💰 Commercial use
-
-The free EULA covers **personal, non-commercial** server operation. Running SCUM-RCON on your own server — even a donation-funded community one — is free.
-
-If you want to **integrate SCUM-RCON into a commercial product** (a paid panel, hosting service, management platform, or any offering that charges for access to
-features it enables), that needs a separate **commercial license**. I'm open for dual-licensing; revenue-based or a flat arrangement, whatever fits the
-project. See [`COMMERCIAL-LICENSE-TEMPLATE.md`](COMMERCIAL-LICENSE-TEMPLATE.md) for the shape of such an agreement.
-
-Reach out to discuss on Discord.
 
 ## 📄 License
 
