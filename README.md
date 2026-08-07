@@ -138,3 +138,5 @@ This project is closed-source but **free to use** for personal, non-commercial u
 * **Third-Party:** The bundled UE4SS is licensed under MIT.
 
 *SCUM-RCON is an independent project and is not affiliated with Gamepires. SCUM is a trademark of Gamepires.*
+
+Built with AI support, reviewed by a human.
