@@ -1,15 +1,17 @@
 ================================================================
- SCUM-RCON - Drop-In Install for a SCUM dedicated server
+    SCUM-RCON - Drop-In Install for a SCUM dedicated server
 ================================================================
 
 This bundle adds a Source RCON server to a SCUM dedicated server.
-It includes UE4SS + the scum_rcon mod, pre-configured and Ready
+It includes UE4SS + the scum_rcon mod, pre-configured and ready
 to drop in. You set a password, the listener comes up, and any
 standard Source RCON client can talk to it.
 
-No RCON client is bundled - use whichever you already have
+No RCON client is bundled here - use whichever you already have
 (mcrcon, rcon-cli, BattleMetrics, RconShell, WebRcon, a custom
-bot, ...). They all speak the same protocol.
+bot, ...). They all speak the same protocol. If your download
+also contained SCUM-RCON-Setup-*.exe, that installer can place
+a ready-to-run console for you on top of the mod.
 
 ================================================================
  REQUIREMENTS
@@ -17,7 +19,8 @@ bot, ...). They all speak the same protocol.
 
 * A SCUM dedicated or local server you control.
 * A working brain.
-* A RCON tool (client)
+* An RCON tool (client)
+
 
 ================================================================
  QUICK-START INSTALL (5 minutes)
@@ -43,7 +46,9 @@ bot, ...). They all speak the same protocol.
         |       \-- scum_rcon/
         |           |-- dlls/main.dll
         |           |-- config.ini                <- EDIT THIS
-        |           \-- enabled.txt
+        |           |-- enabled.txt
+        |           |-- README.md
+        |           \-- plugin-api/               <- for Lua/C++ plugin authors
         \-- ... (other server files)
 
 2) Open ue4ss/Mods/scum_rcon/config.ini and set a real password:
@@ -54,11 +59,19 @@ bot, ...). They all speak the same protocol.
    "CHANGE_ME_BEFORE_USE". The default port is 28015 (change it
    in config.ini if you like).
 
-3) Verify the mod loaded.
+   IMPORTANT: in this file a comment must sit on its OWN line.
+   Anything after a value on the same line becomes part of that
+   value - "password = secret ; my note" sets the password to
+   "secret ; my note".
+
+3) Start the server.
+
+4) Verify the mod loaded.
    Open: <Win64>\ue4ss\UE4SS.log
    Look for the banner:
 
-    [SCUM-RCON] SCUM-RCON ready - listening on 127.0.0.1:28015
+   [SCUM-RCON] init - v0.5.1
+   [SCUM-RCON] SCUM-RCON ready - listening on 0.0.0.0:28015
 
    If you see "RCON listener NOT started: password is unset or
    still the default", go back to step 2.
@@ -72,6 +85,9 @@ bot, ...). They all speak the same protocol.
 
    Any client that speaks Source RCON works the same way.
 
+   Every command also works straight from the in-game admin chat
+   with a '#' in front of it, e.g.:  #ListSquads
+
 ================================================================
  USING THE COMMANDS
 ================================================================
@@ -80,6 +96,13 @@ See USAGE.md (next to this file) for the full command guide:
 how to send commands, which commands need a player's SteamID,
 the notification and chat-colour codes, the spawn-location forms,
 and the common mistakes.
+
+Running the server under Linux (WINE / Proton)? See
+INSTALL_LINUX.md next to this file - one extra environment
+variable is needed before the mod loads at all.
+
+Writing your own commands? plugin-api/PLUGIN_API.md documents how
+a UE4SS Lua mod (or a C++ mod) registers commands with SCUM-RCON.
 
 ================================================================
  IMPORTANT WARNINGS
@@ -91,6 +114,9 @@ and the common mistakes.
 * DO NOT expose the RCON port to the open internet without a
   strong password. The protocol does not encrypt traffic.
 
+* Five wrong passwords from the same address lock that address
+  out for five minutes. That includes you, so type carefully.
+
 ================================================================
  LICENSE / CREDITS
 ================================================================
@@ -100,13 +126,13 @@ Command guide: USAGE.md (next to this file)
 Licenses:
 
 - scum_rcon:        Proprietary EULA - free for community use, not
-                    open source (see LICENSE next to this file)
+                    open source (see LICENSE next to this file).
+                    Not licensed for commercial use.
 - UE4SS framework:  MIT (see ue4ss/LICENSE)
-- RCON-Client:      MIT
 
 Credits:
 
-- UE4SS framework by RE-UE4SS: https://github.com/UE4SS-RE/RE-UE4SS
+- UE4SS framework by the RE-UE4SS team: https://github.com/UE4SS-RE/RE-UE4SS
 
 Not affiliated with Gamepires. SCUM is a trademark of Gamepires.
 
