@@ -13,7 +13,7 @@ Anything that speaks the Valve Source RCON protocol can connect to it. The downl
 
 > ⚠️ **Disclaimer:** Use at your own risk. There is no warranty or guarantee against future game updates breaking the mod, or against potential bans.
 
-> ⚖️ **Zero-Tolerance Policy:** SCUM-RCON is free for server owners and not licensed for commercial use — there is no paid tier, and no commercial license is available. Any monetized product, paid installer, bundled software, or commercial hosting service found shipping or integrating SCUM-RCON will face an immediate DMCA takedown directed at their hosting provider and domain registrar — **without any prior warning**.
+> ⚖️ **Zero-Tolerance Policy:** SCUM-RCON is free for server owners and not licensed for commercial use — no commercial license is available. Any monetized product, paid installer, bundled software, or commercial hosting service found shipping or integrating SCUM-RCON will face an immediate DMCA takedown directed at their hosting provider and domain registrar — **without any prior warning**.
 
 ---
 
