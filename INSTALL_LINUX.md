@@ -72,6 +72,64 @@ Environment=WINEDLLOVERRIDES=dwmapi=n,b
 
 ---
 
+## The second thing: a TLS backend for Wine
+
+Only relevant if the mod loads but stops at the licence check, with this in
+`UE4SS.log`:
+
+```
+[SCUM-RCON] EngineHooks: license server unreachable after 8 attempts
+```
+
+SCUM-RCON talks to its licence server over **HTTPS from inside the game
+process**, using Windows' own `WinHTTP`. Under Wine, WinHTTP's TLS runs through
+Wine's `secur32`, and that needs **GnuTLS** on the host. Slim Docker images
+usually don't ship it — and then every in-process HTTPS request fails while
+everything else looks perfectly healthy.
+
+> **`curl` working proves nothing here.** `curl` is a native Linux binary with
+> its own TLS; it never touches Wine. The same is true of `ping`, `wget` and a
+> reachability test from the host. Only the *in-process* request is affected.
+
+Install the backend and a trust store (Debian/Ubuntu-based images):
+
+```bash
+apt-get update && apt-get install -y libgnutls30 ca-certificates
+update-ca-certificates
+```
+
+On a 32-bit Wine prefix, add `libgnutls30:i386`. Then restart the server — no
+mod or config change is needed, and `WINEDLLOVERRIDES` stays exactly as above.
+
+**Confirming it before you install anything.** Wine prints its own warning at
+startup:
+
+```
+err:winediag:secur32 ... no support for encryption
+```
+
+Or start the server once with Wine's debug channels:
+
+```bash
+WINEDEBUG=+secur32,+winhttp wine SCUMServer.exe
+```
+
+Since v0.5.2 the mod also names the cause itself. A missing TLS backend logs:
+
+```
+[SCUM-RCON] license transport: send failed (WinHTTP error 12175) - TLS handshake failed …
+```
+
+Other numbers you may see there: `12007` DNS could not resolve the host,
+`12029` connection refused or blocked, `12002` timed out. Those are ordinary
+network problems, not Wine ones.
+
+The mod needs outbound HTTPS to **`up.skrypt.gg`** (licence) and
+**`api.ipify.org`** (public-IP detection, so the licence is filed under the
+address the outside world sees). If your egress is filtered, allow both.
+
+---
+
 ## Verify it loaded
 
 After restarting the server with the override set, check the UE4SS log:
@@ -83,7 +141,7 @@ After restarting the server with the override set, check the UE4SS log:
 You should see SCUM-RCON come up, e.g.:
 
 ```
-[SCUM-RCON] init - v0.4.7
+[SCUM-RCON] init - v0.5.1
 [SCUM-RCON] SCUM-RCON ready - listening on 0.0.0.0:<port>
 ```
 
@@ -103,4 +161,7 @@ miss is setting it in the wrong shell/scope, so the server never sees it).
 - **Everything loads but the listener won't start** → not Linux-related; set a
   real `password` in `config.ini` (the listener refuses to start on the default
   placeholder).
+- **`license server unreachable` although the container has internet** → Wine has
+  no TLS backend. See *A TLS backend for Wine* above; `curl` succeeding does not
+  rule this out.
 
