@@ -91,15 +91,27 @@ everything else looks perfectly healthy.
 > its own TLS; it never touches Wine. The same is true of `ping`, `wget` and a
 > reachability test from the host. Only the *in-process* request is affected.
 
-Install the backend and a trust store (Debian/Ubuntu-based images):
+Install the TLS backend (Debian/Ubuntu-based images):
 
 ```bash
-apt-get update && apt-get install -y libgnutls30 ca-certificates
-update-ca-certificates
+apt-get update && apt-get install -y libgnutls30
 ```
 
 On a 32-bit Wine prefix, add `libgnutls30:i386`. Then restart the server — no
 mod or config change is needed, and `WINEDLLOVERRIDES` stays exactly as above.
+
+> **That is the whole requirement.** You do **not** need `ca-certificates`, you
+> do **not** need `wineboot -u`, and it does **not** matter that your Wine
+> prefix has an empty certificate store — which in a Docker image it almost
+> always does, because the prefix is usually created before `ca-certificates` is
+> installed and Wine never backfills it afterwards.
+>
+> Since **v0.5.2** the mod carries the certificate authorities it needs and
+> checks the connection against those itself, instead of asking Wine's store.
+> `libgnutls30` only provides the encryption, which the mod cannot ship itself.
+>
+> If you are on **v0.5.1 or older**, the store did matter, and no amount of
+> fiddling with it reliably fixed this. Update rather than chase it.
 
 **Confirming it before you install anything.** Wine prints its own warning at
 startup:
@@ -117,16 +129,26 @@ WINEDEBUG=+secur32,+winhttp wine SCUMServer.exe
 Since v0.5.2 the mod also names the cause itself. A missing TLS backend logs:
 
 ```
-[SCUM-RCON] license transport: send failed (WinHTTP error 12175) - TLS handshake failed …
+[SCUM-RCON] license transport: send failed (WinHTTP error 12157) - TLS handshake failed …
 ```
 
-Other numbers you may see there: `12007` DNS could not resolve the host,
-`12029` connection refused or blocked, `12002` timed out. Those are ordinary
-network problems, not Wine ones.
+| Code | Meaning | Wine-specific? |
+|---|---|---|
+| `12157` | secure channel error | **yes** — the usual "no TLS backend" code |
+| `12175` | secure failure | **yes** — same class |
+| `12045` | certificate authority invalid | **yes** — same class |
+| `12007` | DNS could not resolve the host | no |
+| `12029` | connection refused or blocked | no |
+| `12002` | timed out | no |
 
-The mod needs outbound HTTPS to **`up.skrypt.gg`** (licence) and
+The first three all mean "TLS never came up" — install `libgnutls30`. The last
+three are ordinary network problems and have nothing to do with Wine.
+
+The mod needs outbound HTTPS to **`up.skrypt.gg`** (licence check) and
 **`api.ipify.org`** (public-IP detection, so the licence is filed under the
-address the outside world sees). If your egress is filtered, allow both.
+address the outside world sees). If your egress is filtered, allow both. The
+public-IP call is best-effort — if it fails, the licence still provisions from
+the address the server connects with.
 
 ---
 
@@ -141,9 +163,13 @@ After restarting the server with the override set, check the UE4SS log:
 You should see SCUM-RCON come up, e.g.:
 
 ```
-[SCUM-RCON] init - v0.5.1
+[SCUM-RCON] init - v0.5.2
+[SCUM-RCON] license VALID (community) - payload verified
 [SCUM-RCON] SCUM-RCON ready - listening on 0.0.0.0:<port>
 ```
+
+The middle line is the one worth checking: it means the licence check got
+through, which on Linux is the step that fails first when something is wrong.
 
 If those lines are missing, the override didn't take — the mod isn't being
 loaded. Double-check the env var reached the `SCUMServer.exe` process (a common
@@ -164,4 +190,15 @@ miss is setting it in the wrong shell/scope, so the server never sees it).
 - **`license server unreachable` although the container has internet** → Wine has
   no TLS backend. See *A TLS backend for Wine* above; `curl` succeeding does not
   rule this out.
+- **`certificate check REJECTED`** → the connection was intercepted, or you are
+  behind a proxy that re-signs TLS. The mod validates the licence server against
+  authorities it carries itself and refuses anything else on purpose. A
+  TLS-inspecting proxy cannot be made to work here; exempt `up.skrypt.gg` from
+  it.
+- **`this SCUM-RCON version is no longer accepted`** → your build was retired.
+  Your licence is still valid — install the current release and it works again.
+  Nothing to un-revoke, nothing to ask for.
+- **Everything works, then stops after a while** → check whether your public IP
+  changed (common on Cloudflare WARP or a dynamic address). The mod re-registers
+  itself automatically; if it does not come back, send the `[SCUM-RCON]` lines.
 
