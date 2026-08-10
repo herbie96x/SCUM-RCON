@@ -1,7 +1,6 @@
 # SCUM-RCON by skrypt.gg
 
 [![Latest release](https://img.shields.io/github/v/release/herbie96x/SCUM-RCON?label=release&color=success)](https://github.com/herbie96x/SCUM-RCON/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/herbie96x/SCUM-RCON/total?label=downloads)](https://github.com/herbie96x/SCUM-RCON/releases)
 [![License: free-to-use (EULA)](https://img.shields.io/badge/license-free--to--use%20(EULA)-brightgreen)](LICENSE)
 [![Discord](https://img.shields.io/badge/Discord-join-5865F2?logo=discord&logoColor=white)](https://discord.gg/HhSraTKfrW)
 [![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/skrypt)
