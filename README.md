@@ -6,6 +6,23 @@
 [![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/skrypt)
 
 
+> [!WARNING]
+> **PROJECT DISCONTINUED (End of Life)**
+>
+> I have made the decision to permanently discontinue the development and support of SCUM-RCON. 
+> 
+> I invested months of hard work to provide the community with a powerful, free tool. Unfortunately, the disrespect from certain individuals, who took my work to hide it behind their own paywalls or claim it as their own, has completely destroyed my passion for this project. I am a developer, not a security babysitter, and I am pulling the plug on my own terms.
+> 
+> **Important Notice Regarding Server Shutdown:**
+> The current public builds require a connection to my license server. **I will take this server offline at the end of August.** Once the server is offline, the mod will permanently cease to function. Please adjust your server infrastructure accordingly.
+> 
+> **Will this be made Open Source?**
+> No. The mod hooks too deeply into the SCUM engine internals for me to just dump the source code onto the internet. Other people might do that, but I am not other people.
+> 
+> A massive thank you to all the legitimate server operators who used the tool fairly, reported bugs, and actually understood the spirit of this project. For you guys, it was worth the effort.
+
+---
+
 A fully compliant **Source RCON** server for SCUM dedicated servers. Execute admin commands seamlessly from any Source-RCON-compatible client—including the bundled `rcon_console`, mcrcon, rcon-cli, WebRcon, or your custom Discord bots. No in-game admin character required.
 
 Anything that speaks the Valve Source RCON protocol can connect to it. The download is a drop-in bundle that includes UE4SS, meaning there is absolutely no additional setup or dependencies required.
